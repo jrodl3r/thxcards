@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Button } from 'reactstrap';
 import './App.css';
 
 class App extends Component {
@@ -41,32 +40,42 @@ class App extends Component {
 
     return (
       <div className="App">
+        <div className="container">
+          <div className="row">
+            <div className="col">1</div>
+            <div className="col">2</div>
+            <div className="col">3</div>
+          </div>
         {/* Render the passwords if we have them */}
         {passwords.length ? (
-          <div>
-            <h1>5 Passwords.</h1>
-            <ul className="passwords">
-              {/*
-                Generally it's bad to use "index" as a key.
-                It's ok for this example because there will always
-                be the same number of passwords, and they never
-                change positions in the array.
-              */}
-              {passwords.map((password, index) =>
-                <li key={index}>
-                  {password}
-                </li>
-              )}
-            </ul>
-            <Button className="more" color="primary" onClick={this.getPasswords}>Get More</Button>
-            <form onSubmit={this.handleSubmit}>
-              <label>
-                Message:
-                <input type="text" value={this.state.msg} onChange={this.handleChange} />
-              </label>
-              <input type="submit" value="Submit" />
-            </form>
-          </div>
+          <section class="card">
+            <div class="card-header">
+                5 Passwords
+            </div>
+            <div class="card-body">
+              <ul className="passwords">
+                {/*
+                  Generally it's bad to use "index" as a key.
+                  It's ok for this example because there will always
+                  be the same number of passwords, and they never
+                  change positions in the array.
+                */}
+                {passwords.map((password, index) =>
+                  <li key={index}>
+                    {password}
+                  </li>
+                )}
+              </ul>
+              <button type="button" className="btn btn-warning btn-rounded aqua-gradient" onClick={this.getPasswords}>Get More</button>
+              <form onSubmit={this.handleSubmit}>
+                <label>
+                  Message:
+                  <input type="text" value={this.state.msg} onChange={this.handleChange} />
+                </label>
+                <input type="submit" value="Submit" />
+              </form>
+            </div>
+          </section>
         ) : (
           // Render a helpful message otherwise
           <div>
@@ -78,6 +87,7 @@ class App extends Component {
             </button>
           </div>
         )}
+        </div>
       </div>
     );
   }
