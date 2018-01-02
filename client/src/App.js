@@ -3,7 +3,7 @@ import './App.css';
 
 class App extends Component {
   // Initialize state
-  state = { passwords: [] }
+  state = { passwords: [], msg: '' }
 
   // Fetch passwords after first mount
   componentDidMount() {
@@ -15,6 +15,24 @@ class App extends Component {
     fetch('/api/passwords')
       .then(res => res.json())
       .then(passwords => this.setState({ passwords }));
+  }
+
+  handleChange = (event) => {
+    this.setState({msg: event.target.value});
+  }
+
+  handleSubmit = (event) => {
+    event.preventDefault();
+    console.log('Message submitted: ' + this.state.msg);
+    fetch('/msg', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        msg: this.state.msg
+      })
+    });
   }
 
   render() {
@@ -39,11 +57,14 @@ class App extends Component {
                 </li>
               )}
             </ul>
-            <button
-              className="more"
-              onClick={this.getPasswords}>
-              Get More
-            </button>
+            <button className="more" onClick={this.getPasswords}>Get More</button>
+            <form onSubmit={this.handleSubmit}>
+              <label>
+                Message:
+                <input type="text" value={this.state.msg} onChange={this.handleChange} />
+              </label>
+              <input type="submit" value="Submit" />
+            </form>
           </div>
         ) : (
           // Render a helpful message otherwise
