@@ -1,14 +1,15 @@
 {
   "name": "thxcards",
   "version": "1.0.0",
-  "description": "",
+  "description": "LSVT Thank you card manager",
+  "author": "John Rodler",
+  "license": "ISC",
+  "keywords": [],
   "main": "index.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.js",
+    "heroku-postbuild": "cd client && npm install --only=dev && npm install && npm run build"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "dependencies": {
     "express": "^4.16.2",
     "password-generator": "^2.2.0"
