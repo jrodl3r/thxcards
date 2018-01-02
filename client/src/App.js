@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Button } from 'reactstrap';
 import './App.css';
 
 class App extends Component {
@@ -57,7 +58,7 @@ class App extends Component {
                 </li>
               )}
             </ul>
-            <button className="more" onClick={this.getPasswords}>Get More</button>
+            <Button className="more" color="primary" onClick={this.getPasswords}>Get More</Button>
             <form onSubmit={this.handleSubmit}>
               <label>
                 Message:
