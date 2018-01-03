@@ -48,11 +48,11 @@ class App extends Component {
           </div>
         {/* Render the passwords if we have them */}
         {passwords.length ? (
-          <section class="card">
-            <div class="card-header">
+          <section className="card">
+            <div className="card-header">
                 5 Passwords
             </div>
-            <div class="card-body">
+            <div className="card-body">
               <ul className="passwords">
                 {/*
                   Generally it's bad to use "index" as a key.
