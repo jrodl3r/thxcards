@@ -1,5 +1,12 @@
+@import '_variables.scss';
+
 .App {
   text-align: center;
+  color: $textColor;
+
+  ul {
+    list-style-type: none;
+  }
 }
 
 .App-logo {
