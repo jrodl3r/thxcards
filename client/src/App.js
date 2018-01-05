@@ -41,7 +41,7 @@ class App extends Component {
     return (
       <div className="App">
         {/*Navbar*/}
-        <nav className="navbar navbar-expand-lg navbar-light aqua-gradient">
+        <nav className="navbar navbar-expand-lg navbar-light aqua-gradient mb-5">
           {/* Navbar brand */}
           <a className="navbar-brand" href="">Navbar</a>
           {/* Collapse button */}
