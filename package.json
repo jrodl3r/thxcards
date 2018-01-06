@@ -4,6 +4,7 @@
   "description": "LSVT Thank you card manager",
   "author": "John Rodler",
   "license": "ISC",
+  "repository": "https://github.com/jrodl3r/thxcards",
   "keywords": [],
   "main": "index.js",
   "scripts": {
