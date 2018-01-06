@@ -1,7 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
-const generatePassword = require('password-generator');
+// const generatePassword = require('password-generator');
 
 const app = express();
 
@@ -18,17 +18,17 @@ app.post('/msg', (req, res) => {
 app.use(express.static(path.join(__dirname, 'client/build')));
 
 // Put all API endpoints under '/api'
-app.get('/api/passwords', (req, res) => {
-  const count = 5;
+// app.get('/api/passwords', (req, res) => {
+//   const count = 5;
 
-  // Generate some passwords
-  const passwords = Array.from(Array(count).keys()).map(i => generatePassword(12, false));
+//   // Generate some passwords
+//   const passwords = Array.from(Array(count).keys()).map(i => generatePassword(12, false));
 
-  // Return them as json
-  res.json(passwords);
+//   // Return them as json
+//   res.json(passwords);
 
-  console.log(`Sent ${count} passwords`);
-});
+//   console.log(`Sent ${count} passwords`);
+// });
 
 // Clients
 app.get('/api/clients', (req, res) => {
@@ -58,11 +58,10 @@ app.get('/api/employees', (req, res) => {
 
 // History
 app.get('/api/history', (req, res) => {
-  const count = 3;
   const history = [
     {list: 'list'}];
   res.json(history);
-  console.log(`Sent ${count} history items`);
+  console.log(`Sent history items`);
 });
 
 // The "catchall" handler: for any request that doesn't
@@ -74,4 +73,4 @@ app.get('*', (req, res) => {
 const port = process.env.PORT || 5000;
 app.listen(port);
 
-console.log(`Password generator listening on ${port}`);
+console.log(`ThxCards listening on ${port}`);
