@@ -2,7 +2,6 @@
 Client Thank You Card Manager at LSVT.
 
 ## To Do
-* setup mongoDB, mongoose schema + express routes
 * setup add client + employee modals
 * setup editable tables component
 * setup fetch error handling
@@ -13,7 +12,8 @@ Client Thank You Card Manager at LSVT.
 * setup create history
 
 ## Complete
-* setup basic component testing w/ enzyme + chai
+* setup mongoDB, mongoose schema + express routes :+1:
+* setup basic component testing w/ enzyme + chai :+1:
 * setup base components :+1:
 * setup nav + layout :+1:
 * setup Sass :+1:

@@ -3,9 +3,12 @@
   "version": "1.0.0",
   "description": "LSVT Thank you card manager",
   "author": "John Rodler",
-  "license": "ISC",
+  "license": "MIT",
   "repository": "https://github.com/jrodl3r/thxcards",
   "keywords": [],
+  "engines": {
+    "node": ">=8.9.4"
+  },
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
@@ -14,7 +17,10 @@
   },
   "dependencies": {
     "body-parser": "^1.18.2",
-    "express": "^4.16.2"
+    "express": "^4.16.2",
+    "express-promise-router": "^2.0.0",
+    "mongoose": "^5.0.0-rc2",
+    "morgan": "^1.9.0"
   },
   "devDependencies": {
     "nodemon": "^1.14.7"
