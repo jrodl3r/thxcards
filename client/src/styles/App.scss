@@ -4,9 +4,8 @@
   text-align: center;
   color: $textColor;
 
-  .empty-text {
-    color: $textColorLight;
-  }
+  & > .container { transition: .25s ease; }
+  .empty-text { color: $textColorLight; }
 
   ul {
     margin: 0;
@@ -36,9 +35,7 @@
   animation: App-logo-spin infinite 20s linear;
 }
 
-.navbar-brand {
-  color: #FFF !important;
-}
+.navbar-brand { color: #FFF !important; }
 
 @keyframes App-logo-spin {
   from { transform: rotate(0deg); }

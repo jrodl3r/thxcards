@@ -65,7 +65,7 @@ class Clients extends Component {
                 </tbody>
               </table>
             </div>
-            <div className="modal fade" id="editClientModal" tabindex="-1" role="dialog"
+            <div className="modal fade" id="editClientModal" tabIndex="-1" role="dialog"
               aria-labelledby="editClientModallLabel" aria-hidden="true">
               <div className="modal-dialog" role="document">
                 <div className="modal-content">

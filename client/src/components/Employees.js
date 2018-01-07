@@ -47,7 +47,7 @@ class Employees extends Component {
                 </tbody>
               </table>
             </div>
-            <div className="modal fade" id="editEmployeeModal" tabindex="-1" role="dialog"
+            <div className="modal fade" id="editEmployeeModal" tabIndex="-1" role="dialog"
               aria-labelledby="editEmployeeModallLabel" aria-hidden="true">
               <div className="modal-dialog" role="document">
                 <div className="modal-content">

@@ -47,7 +47,7 @@ class History extends Component {
                 </tbody>
               </table>
             </div>
-            <div className="modal fade" id="viewHistoryModal" tabindex="-1" role="dialog"
+            <div className="modal fade" id="viewHistoryModal" tabIndex="-1" role="dialog"
               aria-labelledby="viewHistoryModalLabel" aria-hidden="true">
               <div className="modal-dialog" role="document">
                 <div className="modal-content">

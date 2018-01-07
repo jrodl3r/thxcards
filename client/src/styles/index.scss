@@ -8,12 +8,13 @@ html, body {
   padding: 0;
 }
 
-body {
-  font-family: 'Roboto Slab', sans-serif;
-}
+body { font-family: 'Roboto Slab', sans-serif; }
+section { transition: .25s ease; }
 
-a:focus {
-  outline: none;
+a {
+  transition: .25s ease;
+
+  &:focus { outline: none; }
 }
 
 .green-gradient {
@@ -71,7 +72,6 @@ table {
     a {
       position: relative;
       opacity: .4;
-      transition: .25s ease;
 
       &:hover { opacity: .9; }
     }
