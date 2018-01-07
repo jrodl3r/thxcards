@@ -26,6 +26,7 @@ class Employees extends Component {
                 <tr className="mdb-color lighten-5 blue-grey-text">
                   <th>Name</th>
                   <th>Email</th>
+                  <th className="action"></th>
                 </tr>
               </thead>
             </table>
@@ -36,6 +37,11 @@ class Employees extends Component {
                   <tr key={index}>
                     <td>{employee.name}</td>
                     <td>{employee.email}</td>
+                    <td className="action">
+                      <a href="" data-toggle="tooltip" data-placement="left" title="Edit">
+                        <i className="fas fa-lg fa-user blue-grey-text"></i>
+                      </a>
+                    </td>
                   </tr>
                 )}
                 </tbody>

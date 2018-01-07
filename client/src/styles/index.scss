@@ -1,6 +1,6 @@
 @import url('https://fonts.googleapis.com/css?family=Roboto+Slab');
-/* @import url('https://fonts.googleapis.com/css?family=Montserrat');
-@import url('https://fonts.googleapis.com/css?family=Roboto'); */
+// @import url('https://fonts.googleapis.com/css?family=Montserrat');
+// @import url('https://fonts.googleapis.com/css?family=Roboto');
 
 html, body {
   height: 100%;
@@ -31,30 +31,45 @@ body {
   overflow-y: auto;
   -ms-overflow-style: -ms-autohiding-scrollbar;
 
-  &.table-fixed-header {
-    margin-top: -2px;
-  }
+  &.table-fixed-header { margin-top: -2px; }
 }
 
 table {
   th, td {
-    width: 65%;
-    padding-right: 15px !important;
+    width: 60%;
+    padding-right: 18px !important;
     padding-left: 0 !important;
     text-align: left;
     text-indent: 15px;
+    cursor: default;
 
     &:first-of-type {
-      width: 35%;
+      width: 30%;
       padding-right: 0 !important;
 
       &.date {
-        width: 10%;
+        width: 15%;
 
-        & + th, & + td {
-          width: 90%;
-        }
+        & + th, & + td { width: 85%; }
       }
+    }
+
+    &.action {
+      text-align: right;
+      width: 10%;
+      padding-right: 0 !important;
+
+      a { padding-right: 15px; }
+    }
+
+    &.info { width: 75% !important; }
+
+    a {
+      position: relative;
+      opacity: .4;
+      transition: .25s ease;
+
+      &:hover { opacity: .9; }
     }
   }
 
@@ -81,8 +96,28 @@ table {
   }
 
   tbody {
-    tr td {
-      font-size: 12px;
-    }
+    tr td { font-size: 12px; }
   }
+}
+
+.tooltip {
+  display: none;
+  left: 10px !important;
+  font-size: 10px;
+  cursor: default;
+  pointer-events: none;
+
+  &:after { left: 5px; }
+
+  .arrow:before { border-left-color: rgba(158,158,158, .1) !important; }
+
+  .tooltip-inner {
+    padding: 2px 6px;
+    color: #90a4ae; // MDB blue-grey lighten-2
+    background-color: rgba(158,158,158, .1) !important; // MDB rgba-grey-slight
+  }
+}
+
+@media (min-width: 768px) {
+  .tooltip { display: block; }
 }

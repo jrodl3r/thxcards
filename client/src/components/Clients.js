@@ -37,76 +37,82 @@ class Clients extends Component {
     return (
       <section className="card mb-5">
         <div className="card-header aqua-gradient white-text">Clients</div>
-          {clients.length ? (
-            <div className="card-body p-0">
-              <table className="table table-sm mb-0">
-                <thead>
-                  <tr className="mdb-color lighten-5 blue-grey-text">
-                    <th>Name</th>
-                    <th>Address</th>
+        {clients.length ? (
+          <div className="card-body p-0">
+            <table className="table table-sm mb-0">
+              <thead>
+                <tr className="mdb-color lighten-5 blue-grey-text">
+                  <th>Name</th>
+                  <th>Address</th>
+                  <th className="action"></th>
+                </tr>
+              </thead>
+            </table>
+            <div className="table-wrapper table-fixed-header">
+              <table className="table table-sm table-striped mb-0">
+                <tbody>
+                {clients.map((client, index) =>
+                  <tr key={index}>
+                    <td>{client.name}</td>
+                    <td>{client.address}</td>
+                    <td className="action">
+                      <a href="" data-toggle="tooltip" data-placement="left" title="Edit">
+                        <i className="fas fa-lg fa-user blue-grey-text"></i>
+                      </a>
+                    </td>
                   </tr>
-                </thead>
-              </table>
-              <div className="table-wrapper table-fixed-header">
-                <table className="table table-sm table-striped mb-0">
-                  <tbody>
-                  {clients.map((client, index) => 
-                    <tr key={index}>
-                      <td>{client.name}</td>
-                      <td>{client.address}</td>
-                    </tr>
-                  )}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-            ) : (
-              <div className="card-body">
-                <div className="empty-text">No Items</div>
-              </div>
-            )}
-        {/* Render the passwords if we have them */}
-        {/*passwords.length ? (
-          <section className="card mb-5">
-            <div className="card-header">
-                5 Passwords
-            </div>
-            <div className="card-body">
-              <ul className="passwords">
-                {*//*
-                  Generally it's bad to use "index" as a key.
-                  It's ok for this example because there will always
-                  be the same number of passwords, and they never
-                  change positions in the array.
-                *//*}
-                {passwords.map((password, index) =>
-                  <li key={index}>
-                    {password}
-                  </li>
                 )}
-              </ul>
-              <button type="button" className="btn btn-warning btn-rounded aqua-gradient"
-                onClick={this.getPasswords}>Get More</button>
-              <form onSubmit={this.handleSubmit}>
-                <label>
-                  Message:
-                  <input type="text" value={this.state.msg} onChange={this.handleChange} />
-                </label>
-                <input type="submit" value="Submit" />
-              </form>
+                </tbody>
+              </table>
             </div>
-          </section>
-        ) : (
-          // Render a helpful message otherwise
-          <div>
-            <h1>No passwords :(</h1>
-            <button
-              className="more"
-              onClick={this.getPasswords}>
-              Try Again?
-            </button>
           </div>
-        )*/}
+          ) : (
+            <div className="card-body">
+              <div className="empty-text">No Items</div>
+            </div>
+          )}
+          {/* Render the passwords if we have them */}
+          {/*passwords.length ? (
+            <section className="card mb-5">
+              <div className="card-header">
+                  5 Passwords
+              </div>
+              <div className="card-body">
+                <ul className="passwords">
+                  {*//*
+                    Generally it's bad to use "index" as a key.
+                    It's ok for this example because there will always
+                    be the same number of passwords, and they never
+                    change positions in the array.
+                  *//*}
+                  {passwords.map((password, index) =>
+                    <li key={index}>
+                      {password}
+                    </li>
+                  )}
+                </ul>
+                <button type="button" className="btn btn-warning btn-rounded aqua-gradient"
+                  onClick={this.getPasswords}>Get More</button>
+                <form onSubmit={this.handleSubmit}>
+                  <label>
+                    Message:
+                    <input type="text" value={this.state.msg} onChange={this.handleChange} />
+                  </label>
+                  <input type="submit" value="Submit" />
+                </form>
+              </div>
+            </section>
+          ) : (
+            // Render a helpful message otherwise
+            <div>
+              <h1>No passwords :(</h1>
+              <button
+                className="more"
+                onClick={this.getPasswords}>
+                Try Again?
+              </button>
+            </div>
+          )*/}
       </section>
     );
   }

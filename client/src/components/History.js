@@ -25,7 +25,8 @@ class History extends Component {
               <thead>
                 <tr className="mdb-color lighten-5 blue-grey-text">
                   <th className="date">Date</th>
-                  <th>Info</th>
+                  <th className="info">Info</th>
+                  <th className="action"></th>
                 </tr>
               </thead>
             </table>
@@ -35,7 +36,12 @@ class History extends Component {
                 {history.map((history, index) => 
                   <tr key={index}>
                     <td className="date">Date</td>
-                    <td>{history.list}</td>
+                    <td className="info">{history.list}</td>
+                    <td className="action">
+                      <a href="" data-toggle="tooltip" data-placement="left" title="View">
+                        <i className="fas fa-lg fa-eye blue-grey-text"></i>
+                      </a>
+                    </td>
                   </tr>
                 )}
                 </tbody>
