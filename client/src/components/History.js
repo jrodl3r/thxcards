@@ -21,11 +21,20 @@ class History extends Component {
         <div className="card-header purple-gradient white-text">History</div>
         {history.length ? (
           <div className="card-body p-0">
-            <div class="table-wrapper">
+            <table className="table table-sm mb-0">
+              <thead>
+                <tr className="mdb-color lighten-5 blue-grey-text">
+                  <th className="date">Date</th>
+                  <th>Info</th>
+                </tr>
+              </thead>
+            </table>
+            <div className="table-wrapper table-fixed-header">
               <table className="table table-striped table-sm mb-0">
                 <tbody>
                 {history.map((history, index) => 
                   <tr key={index}>
+                    <td className="date">Date</td>
                     <td>{history.list}</td>
                   </tr>
                 )}

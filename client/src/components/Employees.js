@@ -21,14 +21,16 @@ class Employees extends Component {
         <div className="card-header green-gradient white-text">Employees</div>
         {employees.length ? (
           <div className="card-body p-0">
-            <div class="table-wrapper">
-              <table className="table table-striped table-sm mb-0">
-                <thead>
-                  <tr className="mdb-color lighten-5 blue-grey-text">
-                    <th>Name</th>
-                    <th>Email</th>
-                  </tr>
-                </thead>
+            <table className="table table-sm mb-0">
+              <thead>
+                <tr className="mdb-color lighten-5 blue-grey-text">
+                  <th>Name</th>
+                  <th>Email</th>
+                </tr>
+              </thead>
+            </table>
+            <div className="table-wrapper table-fixed-header">
+              <table className="table table-sm table-striped mb-0">
                 <tbody>
                 {employees.map((employee, index) => 
                   <tr key={index}>

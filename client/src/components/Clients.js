@@ -39,14 +39,16 @@ class Clients extends Component {
         <div className="card-header aqua-gradient white-text">Clients</div>
           {clients.length ? (
             <div className="card-body p-0">
-              <div class="table-wrapper">
-                <table className="table table-striped table-sm mb-0">
-                  <thead>
-                    <tr className="mdb-color lighten-5 blue-grey-text">
-                      <th>Name</th>
-                      <th>Address</th>
-                    </tr>
-                  </thead>
+              <table className="table table-sm mb-0">
+                <thead>
+                  <tr className="mdb-color lighten-5 blue-grey-text">
+                    <th>Name</th>
+                    <th>Address</th>
+                  </tr>
+                </thead>
+              </table>
+              <div className="table-wrapper table-fixed-header">
+                <table className="table table-sm table-striped mb-0">
                   <tbody>
                   {clients.map((client, index) => 
                     <tr key={index}>

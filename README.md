@@ -1,10 +1,10 @@
 # ThxCards
-Client Thank You Card Manager at LSVT.
+LSVT Client Thank You Card Manager
 
 ## To Do
-* setup add client + employee modals
-* setup editable tables component
-* setup fetch error handling
+* setup alphabetical sorting
+* setup add + edit client / employee modals
+* add fetch error handling
 * setup stubbed sub-component fetch tests
 * setup import spreadsheet data feature
 * setup matching + timing logic
