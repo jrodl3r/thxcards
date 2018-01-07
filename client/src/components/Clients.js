@@ -36,19 +36,33 @@ class Clients extends Component {
 
     return (
       <section className="card mb-5">
-        {/*<div className="card-header info-color-dark white-text">Clients</div>*/}
         <div className="card-header aqua-gradient white-text">Clients</div>
-        <div className="card-body">
           {clients.length ? (
-            <ul>
-              {clients.map((client, index) =>
-                <li key={index}>{client.name}, {client.address}</li>
-              )}
-            </ul>
-          ) : (
-            <div className="empty-text">No Items</div>
-          )}
-        </div>
+            <div className="card-body p-0">
+              <div class="table-wrapper">
+                <table className="table table-striped table-sm mb-0">
+                  <thead>
+                    <tr className="mdb-color lighten-5 blue-grey-text">
+                      <th>Name</th>
+                      <th>Address</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                  {clients.map((client, index) => 
+                    <tr key={index}>
+                      <td>{client.name}</td>
+                      <td>{client.address}</td>
+                    </tr>
+                  )}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            ) : (
+              <div className="card-body">
+                <div className="empty-text">No Items</div>
+              </div>
+            )}
         {/* Render the passwords if we have them */}
         {/*passwords.length ? (
           <section className="card mb-5">

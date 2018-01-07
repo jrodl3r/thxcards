@@ -19,17 +19,25 @@ class History extends Component {
     return (
       <section className="card mb-5">
         <div className="card-header purple-gradient white-text">History</div>
-        <div className="card-body">
-          {history.length ? (
-            <ul>
-              {history.map((item, index) =>
-                <li key={index}>{item.list}</li>
-              )}
-            </ul>
-          ) : (
+        {history.length ? (
+          <div className="card-body p-0">
+            <div class="table-wrapper">
+              <table className="table table-striped table-sm mb-0">
+                <tbody>
+                {history.map((history, index) => 
+                  <tr key={index}>
+                    <td>{history.list}</td>
+                  </tr>
+                )}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        ) : (
+          <div className="card-body">
             <div className="empty-text">No Items</div>
-          )}
-        </div>
+          </div>
+        )}
       </section>
     );
   }

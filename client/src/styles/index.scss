@@ -23,3 +23,32 @@ body {
 .navbar-dark {
   background-color: #243a51;
 }
+
+.table-wrapper {
+  display: block;
+  max-height: 300px;
+  overflow-y: auto;
+  -ms-overflow-style: -ms-autohiding-scrollbar;
+}
+
+table {
+  th, td {
+    text-align: left;
+    text-indent: 15px;
+    padding-right: 5px !important;
+    padding-left: 0 !important;
+  }
+
+  thead tr {
+    line-height: 14px;
+
+    th {
+      font-size: 13px;
+      font-weight: 700;
+    }
+  }
+
+  tbody tr td {
+    font-size: 12px;
+  }
+}
