@@ -18,7 +18,7 @@ class Employees extends Component {
 
     return (
       <section className="card mb-5">
-        <div className="card-header default-color white-text">Employees</div>
+        <div className="card-header green-gradient white-text">Employees</div>
         <div className="card-body">
           {employees.length ? (
             <ul>

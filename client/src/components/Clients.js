@@ -36,7 +36,8 @@ class Clients extends Component {
 
     return (
       <section className="card mb-5">
-        <div className="card-header info-color-dark white-text">Clients</div>
+        {/*<div className="card-header info-color-dark white-text">Clients</div>*/}
+        <div className="card-header aqua-gradient white-text">Clients</div>
         <div className="card-body">
           {clients.length ? (
             <ul>

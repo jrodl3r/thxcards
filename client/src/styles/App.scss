@@ -8,12 +8,22 @@
     color: $textColorLight;
   }
 
-  ul { list-style-type: none; }
+  ul {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+  }
 }
 
 .card-header {
+  height: 46px;
+  padding-top: 0;
+  padding-bottom: 0;
+  line-height: 46px;
   font-weight: 700;
   text-align: left;
+  letter-spacing: .65px;
+  text-shadow: 1px 1px rgba(0,0,0, .2);
 }
 
 .App-logo {
