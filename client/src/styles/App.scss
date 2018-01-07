@@ -4,6 +4,10 @@
   text-align: center;
   color: $textColor;
 
+  .empty-text {
+    color: $textColorLight;
+  }
+
   ul { list-style-type: none; }
 }
 

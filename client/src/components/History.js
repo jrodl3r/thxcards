@@ -27,7 +27,7 @@ class History extends Component {
               )}
             </ul>
           ) : (
-            <div>Loading...</div>
+            <div className="empty-text">No Items</div>
           )}
         </div>
       </section>
