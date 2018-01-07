@@ -38,7 +38,7 @@ class Employees extends Component {
                     <td>{employee.name}</td>
                     <td>{employee.email}</td>
                     <td className="action">
-                      <a href="" data-toggle="tooltip" data-placement="left" title="Edit">
+                      <a href="" title="Edit" data-toggle="modal" data-target="#editEmployeeModal">
                         <i className="fas fa-lg fa-user blue-grey-text"></i>
                       </a>
                     </td>
@@ -46,6 +46,26 @@ class Employees extends Component {
                 )}
                 </tbody>
               </table>
+            </div>
+            <div className="modal fade" id="editEmployeeModal" tabindex="-1" role="dialog"
+              aria-labelledby="editEmployeeModallLabel" aria-hidden="true">
+              <div className="modal-dialog" role="document">
+                <div className="modal-content">
+                  <div className="modal-header">
+                    <h5 className="modal-title" id="editEmployeeModalLabel">Edit Employee</h5>
+                    <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div className="modal-body">
+                    Edit Employee
+                  </div>
+                  <div className="modal-footer">
+                    <button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" className="btn btn-primary">Save</button>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         ) : (

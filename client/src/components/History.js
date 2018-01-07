@@ -38,7 +38,7 @@ class History extends Component {
                     <td className="date">Date</td>
                     <td className="info">{history.list}</td>
                     <td className="action">
-                      <a href="" data-toggle="tooltip" data-placement="left" title="View">
+                      <a href="" title="View" data-toggle="modal" data-target="#viewHistoryModal">
                         <i className="fas fa-lg fa-eye blue-grey-text"></i>
                       </a>
                     </td>
@@ -46,6 +46,25 @@ class History extends Component {
                 )}
                 </tbody>
               </table>
+            </div>
+            <div className="modal fade" id="viewHistoryModal" tabindex="-1" role="dialog"
+              aria-labelledby="viewHistoryModalLabel" aria-hidden="true">
+              <div className="modal-dialog" role="document">
+                <div className="modal-content">
+                  <div className="modal-header">
+                    <h5 className="modal-title" id="viewHistoryModalLabel">View History</h5>
+                    <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div className="modal-body">
+                    View History
+                  </div>
+                  <div className="modal-footer">
+                    <button type="button" className="btn btn-primary" data-dismiss="modal">Close</button>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         ) : (

@@ -12,6 +12,10 @@ body {
   font-family: 'Roboto Slab', sans-serif;
 }
 
+a:focus {
+  outline: none;
+}
+
 .green-gradient {
   background: linear-gradient(40deg, #14dfc0, #3a309f);
 }
