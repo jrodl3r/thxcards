@@ -1,16 +1,51 @@
 const Client = require('../models/client');
+const Joi = require('joi');
+const idSchema = Joi.object().keys({
+  clientID: Joi.string().regex(/^[0-9a-fA-F]{24}$/).required()
+});
 
 module.exports = {
   index: async (req, res, next) => {
     const clients = await Client.find({});
     res.status(200).json(clients);
-    console.log('Sending Clients: ', clients);
+    // console.log('Sending Clients: ', clients);
   },
 
   newClient: async (req, res, next) => {
     const newClient = new Client(req.body);
     const client = await newClient.save();
     res.status(201).json(client);
-    console.error('Saved Client: ', client);
+    console.log('Saved Client: ', client);
+  },
+
+  getClient: async (req, res, next) => {
+    const result = Joi.validate(req.params, idSchema);
+    console.log('result: ', result);
+    const { clientID } = req.params;
+    const client = await Client.findById(clientID);
+    res.status(200).json(client);
+    // console.log('Sending Client: ', client);
+  },
+
+  replaceClient: async (req, res, next) => {
+    // req.body must contain all fields
+    const { clientID } = req.params;
+    const newClient = req.body;
+    const result = await Client.findByIdAndUpdate(clientID, newClient);
+    res.status(200).json({ success: true });
+    // console.log('Replaced Client: ', clientID);
+  },
+
+  updateClient: async (req, res, next) => {
+    // req.body can contain any number of fields
+    const { clientID } = req.params;
+    const newClient = req.body;
+    const result = await Client.findByIdAndUpdate(clientID, newClient);
+    res.status(200).json({ success: true });
+    // console.log('Updated Client: ', clientID);
+  },
+
+  deleteClient: async (req, res, next) => {
+    
   }
 };

@@ -1,7 +1,11 @@
+/* global $, toastr */
 import React, { Component } from 'react';
 
 class Clients extends Component {
-  state = { clients: [] }
+  state = {
+    clients: [],
+    activeClient: { name: '', address: '' }
+  }
 
   componentDidMount() {
     this.getClients();
@@ -10,33 +14,49 @@ class Clients extends Component {
   getClients = () => {
     fetch('/api/clients')
       .then(res => res.json())
-      .then(clients => this.setState({ clients }));
+      .then(clients => this.setState({clients}));
   }
 
-  // handleChange = (event) => {
-  //   this.setState({msg: event.target.value});
-  // }
+  handleChangeClientName = (event) => {
+    this.setState({activeClient: {name: event.target.value, address: this.state.activeClient.address}});
+  }
 
-  // handleSubmit = (event) => {
-  //   event.preventDefault();
-  //   console.log('Message submitted: ' + this.state.msg);
-  //   fetch('/msg', {
-  //     method: 'POST',
-  //     headers: {
-  //       'Content-Type': 'application/json'
-  //     },
-  //     body: JSON.stringify({
-  //       msg: this.state.msg
-  //     })
-  //   });
-  // }
+  handleChangeClientAddress = (event) => {
+    this.setState({activeClient: {name: this.state.activeClient.name, address: event.target.value}});
+  }
+
+  handleSubmitNewClient = (event) => {
+    event.preventDefault();
+    fetch('/api/clients', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        name: this.state.activeClient.name,
+        address: this.state.activeClient.address
+      })
+    })
+    .then(() => {
+      toastr.success('Added ' + this.state.activeClient.name + ' to Clients');
+      this.setState({activeClient: {name: '', address: ''}});
+      this.getClients();
+      $('#addClientModal').modal('hide');
+      $('#addClientModal input').removeClass('valid invalid');
+    });
+  }
 
   render() {
-    const { clients } = this.state;
+    const { clients, activeClient } = this.state;
 
     return (
       <section className="card mb-5">
-        <div className="card-header aqua-gradient white-text">Clients</div>
+        <div className="card-header aqua-gradient white-text">
+          Clients
+          <a href="" title="Add Client" data-toggle="modal" data-target="#addClientModal">
+            <i className="fas fa-lg fa-user-plus blue-grey-text"></i>
+          </a>
+        </div>
         {clients.length ? (
           <div className="card-body p-0">
             <table className="table table-sm mb-0">
@@ -52,7 +72,7 @@ class Clients extends Component {
               <table className="table table-sm table-striped mb-0">
                 <tbody>
                 {clients.map((client, index) =>
-                  <tr key={index}>
+                  <tr key={client._id}>
                     <td>{client.name}</td>
                     <td>{client.address}</td>
                     <td className="action">
@@ -79,60 +99,49 @@ class Clients extends Component {
                     Edit Client
                   </div>
                   <div className="modal-footer">
-                    <button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" className="btn btn-primary">Save</button>
+                    <button type="button" className="btn btn-secondary waves-effect" data-dismiss="modal">Cancel</button>
+                    <button type="button" className="btn btn-primary waves-effect">Save</button>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-          ) : (
-            <div className="card-body">
-              <div className="empty-text">No Items</div>
-            </div>
-          )}
-          {/* Render the passwords if we have them */}
-          {/*passwords.length ? (
-            <section className="card mb-5">
-              <div className="card-header">
-                  5 Passwords
+        ) : (
+          <div className="card-body">
+            <div className="empty-text">No Items</div>
+          </div>
+        )}
+        <div className="modal fade" id="addClientModal" tabIndex="-1" role="dialog"
+          aria-labelledby="addClientModallLabel" aria-hidden="true">
+          <div className="modal-dialog" role="document">
+            <div className="modal-content">
+              <div className="modal-header info-color-dark white-text">
+                <h5 className="modal-title" id="addClientModallLabel">Add Client</h5>
+                <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true" className="white-text">&times;</span>
+                </button>
               </div>
-              <div className="card-body">
-                <ul className="passwords">
-                  {*//*
-                    Generally it's bad to use "index" as a key.
-                    It's ok for this example because there will always
-                    be the same number of passwords, and they never
-                    change positions in the array.
-                  *//*}
-                  {passwords.map((password, index) =>
-                    <li key={index}>
-                      {password}
-                    </li>
-                  )}
-                </ul>
-                <button type="button" className="btn btn-warning btn-rounded aqua-gradient"
-                  onClick={this.getPasswords}>Get More</button>
-                <form onSubmit={this.handleSubmit}>
-                  <label>
-                    Message:
-                    <input type="text" value={this.state.msg} onChange={this.handleChange} />
-                  </label>
-                  <input type="submit" value="Submit" />
-                </form>
-              </div>
-            </section>
-          ) : (
-            // Render a helpful message otherwise
-            <div>
-              <h1>No passwords :(</h1>
-              <button
-                className="more"
-                onClick={this.getPasswords}>
-                Try Again?
-              </button>
+              <form onSubmit={this.handleSubmitNewClient}>
+                <div className="modal-body">
+                  <div className="md-form mt-4">
+                    <input type="text" id="clientName" className="form-control validate" pattern=".{3,}"
+                      value={activeClient.name} onChange={this.handleChangeClientName} required />
+                    <label htmlFor="clientName" data-error="3 characters minimum" data-success="ok">Name:</label>
+                  </div>
+                  <div className="md-form mt-5 mb-5">
+                    <input type="text" id="clientAddress" className="form-control validate" pattern=".{10,}"
+                      value={activeClient.address} onChange={this.handleChangeClientAddress} required />
+                    <label htmlFor="clientAddress" data-error="10 characters minimum" data-success="ok">Address:</label>
+                  </div>
+                </div>
+                <div className="modal-footer blue-grey lighten-5">
+                  <button type="button" className="btn btn-secondary waves-effect" data-dismiss="modal">Cancel</button>
+                  <input type="submit" className="btn btn-primary waves-effect" value="Save" />
+                </div>
+              </form>
             </div>
-          )*/}
+          </div>
+        </div>
       </section>
     );
   }

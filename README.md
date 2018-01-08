@@ -2,8 +2,8 @@
 LSVT Client Thank You Card Manager
 
 ## To Do
+* setup edit client + employee modals :+1:
 * setup alphabetical sorting
-* setup add + edit client / employee modals
 * add fetch error handling
 * setup stubbed sub-component fetch tests
 * setup import spreadsheet data feature
@@ -12,6 +12,7 @@ LSVT Client Thank You Card Manager
 * setup create history
 
 ## Complete
+* setup add client + employee modals :+1:
 * setup mongoDB, mongoose schema + express routes :+1:
 * setup basic component testing w/ enzyme + chai :+1:
 * setup base components :+1:

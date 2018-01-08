@@ -16,15 +16,33 @@
 
 .card-header {
   height: 42px;
-  padding-top: 0;
-  padding-bottom: 0;
-  padding-left: 15px;
+  padding: 0 10px 0 15px;
   line-height: 42px;
   font-weight: 700;
   text-align: left;
   letter-spacing: .65px;
   text-shadow: 1px 1px rgba(0,0,0, .2);
   cursor: default;
+
+  a {
+    float: right;
+    opacity: .5;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+}
+
+.modal-header {
+  text-shadow: 1px 1px rgba(0,0,0, .2);
+  border-top-left-radius: 2px;
+  border-top-right-radius: 2px;
+
+  .close {
+    padding-right: 10px;
+    cursor: pointer;
+  }
 }
 
 .App-logo {

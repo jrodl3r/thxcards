@@ -33,10 +33,10 @@ class History extends Component {
             <div className="table-wrapper table-fixed-header">
               <table className="table table-striped table-sm mb-0">
                 <tbody>
-                {history.map((history, index) => 
-                  <tr key={index}>
+                {history.map((item, index) => 
+                  <tr key={item._id}>
                     <td className="date">Date</td>
-                    <td className="info">{history.list}</td>
+                    <td className="info">{item.list}</td>
                     <td className="action">
                       <a href="" title="View" data-toggle="modal" data-target="#viewHistoryModal">
                         <i className="fas fa-lg fa-eye blue-grey-text"></i>

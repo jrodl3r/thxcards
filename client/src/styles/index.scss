@@ -39,6 +39,11 @@ a {
   &.table-fixed-header { margin-top: -2px; }
 }
 
+.md-form label {
+  width: 100%;
+  text-align: left;
+}
+
 table {
   th, td {
     width: 60%;
@@ -124,4 +129,13 @@ table {
 
 @media (min-width: 768px) {
   .tooltip { display: block; }
+}
+
+#toast-container {
+  font-size: 13px !important;
+
+  &>div {
+    padding-left: 45px !important;
+    background-size: 18px 18px;
+  }
 }
