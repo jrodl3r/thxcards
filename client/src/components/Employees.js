@@ -89,16 +89,16 @@ class Employees extends Component {
               aria-labelledby="editEmployeeModallLabel" aria-hidden="true">
               <div className="modal-dialog" role="document">
                 <div className="modal-content">
-                  <div className="modal-header">
+                  <div className="modal-header light-blue darken-1 white-text">
                     <h5 className="modal-title" id="editEmployeeModalLabel">Edit Employee</h5>
-                    <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                    <button type="button" className="close white-text" data-dismiss="modal" aria-label="Close">
                       <span aria-hidden="true">&times;</span>
                     </button>
                   </div>
                   <div className="modal-body">
                     Edit Employee
                   </div>
-                  <div className="modal-footer">
+                  <div className="modal-footer blue-grey lighten-5">
                     <button type="button" className="btn btn-secondary" data-dismiss="modal">Cancel</button>
                     <button type="button" className="btn btn-primary">Save</button>
                   </div>
@@ -115,7 +115,7 @@ class Employees extends Component {
           aria-labelledby="addEmployeeModallLabel" aria-hidden="true">
           <div className="modal-dialog" role="document">
             <div className="modal-content">
-              <div className="modal-header info-color-dark white-text">
+              <div className="modal-header light-blue darken-1 white-text">
                 <h5 className="modal-title" id="addEmployeeModallLabel">Add Employee</h5>
                 <button type="button" className="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true" className="white-text">&times;</span>

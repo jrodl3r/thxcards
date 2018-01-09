@@ -35,23 +35,20 @@
     }
   }
 
-  &.employees-header {
-    background: linear-gradient(40deg, #14dfc0, #6a00de);
-  }
-
-  &.clients-header {
-    background: linear-gradient(40deg, #0fdac0, #0076de);
-  }
-
-  &.history-header {
-    background: linear-gradient(40deg, #ba6eff, #3f56c8);
-  }
+  &.employees-header { background: linear-gradient(40deg, #14dfc0, #6a00de); }
+  &.clients-header { background: linear-gradient(40deg, #0fdac0, #0076de); }
+  &.history-header { background: linear-gradient(40deg, #ba6eff, #3f56c8); }
 }
 
 .modal-header {
   text-shadow: 1px 1px rgba(0,0,0, .2);
   border-top-left-radius: 2px;
   border-top-right-radius: 2px;
+
+  .modal-title {
+    margin-bottom: 0 !important;
+    font-size: 1rem;
+  }
 
   .close {
     padding-right: 10px;
