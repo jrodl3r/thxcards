@@ -51,10 +51,10 @@ class Clients extends Component {
 
     return (
       <section className="card mb-5">
-        <div className="card-header aqua-gradient white-text">
+        <div className="card-header clients-header white-text">
           Clients
           <a href="" title="Add Client" data-toggle="modal" data-target="#addClientModal">
-            <i className="fas fa-lg fa-user-plus blue-grey-text"></i>
+            <i className="fas fa-lg fa-user-plus white-text"></i>
           </a>
         </div>
         {clients.length ? (

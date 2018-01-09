@@ -17,14 +17,6 @@ a {
   &:focus { outline: none; }
 }
 
-.green-gradient {
-  background: linear-gradient(40deg, #14dfc0, #3a309f);
-}
-
-.purple-gradient {
-  background: linear-gradient(40deg, #ba6eff, #3f56c8);
-}
-
 .navbar-dark {
   background-color: #243a51;
 }
@@ -69,7 +61,7 @@ table {
       width: 10%;
       padding-right: 0 !important;
 
-      a { padding-right: 15px; }
+      a { padding-right: 18px; }
     }
 
     &.info { width: 75% !important; }

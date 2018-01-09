@@ -51,10 +51,10 @@ class Employees extends Component {
 
     return (
       <section className="card mb-5">
-        <div className="card-header green-gradient white-text">
+        <div className="card-header employees-header white-text">
           Employees
           <a href="" title="Add Employee" data-toggle="modal" data-target="#addEmployeeModal">
-            <i className="fas fa-lg fa-user-plus grey-text"></i>
+            <i className="fas fa-lg fa-user-plus white-text"></i>
           </a>
         </div>
         {employees.length ? (

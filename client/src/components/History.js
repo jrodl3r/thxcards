@@ -18,7 +18,7 @@ class History extends Component {
 
     return (
       <section className="card mb-5">
-        <div className="card-header purple-gradient white-text">History</div>
+        <div className="card-header history-header white-text">History</div>
         {history.length ? (
           <div className="card-body p-0">
             <table className="table table-sm mb-0">
