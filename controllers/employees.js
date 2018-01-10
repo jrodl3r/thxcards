@@ -22,7 +22,6 @@ module.exports = {
   },
 
   replaceEmployee: async (req, res, next) => {
-    // req.body must contain all fields
     const { employeeID } = req.params;
     const newEmployee = req.body;
     const result = await Employee.findByIdAndUpdate(employeeID, newEmployee);
@@ -31,7 +30,6 @@ module.exports = {
   },
 
   updateEmployee: async (req, res, next) => {
-    // req.body can contain any number of fields
     const { employeeID } = req.params;
     const newEmployee = req.body;
     const result = await Employee.findByIdAndUpdate(employeeID, newEmployee);

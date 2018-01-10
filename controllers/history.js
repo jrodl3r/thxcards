@@ -22,7 +22,6 @@ module.exports = {
   },
 
   replaceItem: async (req, res, next) => {
-    // req.body must contain all fields
     const { historyID } = req.params;
     const newItem = req.body;
     const result = await History.findByIdAndUpdate(historyID, newItem);
@@ -31,7 +30,6 @@ module.exports = {
   },
 
   updateItem: async (req, res, next) => {
-    // req.body can contain any number of fields
     const { historyID } = req.params;
     const newItem = req.body;
     const result = await History.findByIdAndUpdate(historyID, newItem);
