@@ -11,7 +11,7 @@ module.exports = {
     const newClient = new Client(req.body);
     const client = await newClient.save();
     res.status(201).json(client);
-    console.log('Saved Client: ', client);
+    // console.log('Saved Client: ', client);
   },
 
   getClient: async (req, res, next) => {
