@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { handleErrors } from '../utils/helpers';
 
 class History extends Component {
   state = { history: [] }
@@ -9,8 +10,10 @@ class History extends Component {
 
   getHistory = () => {
     fetch('/api/history')
+      .then(handleErrors)
       .then(res => res.json())
-      .then(history => this.setState({ history }));
+      .then(history => this.setState({ history }))
+      .catch(err => console.log(err));
   }
 
   render() {

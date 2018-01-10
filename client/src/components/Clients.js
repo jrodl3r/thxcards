@@ -1,5 +1,6 @@
 /* global $, toastr */
 import React, { Component } from 'react';
+import { handleErrors } from '../utils/helpers';
 
 class Clients extends Component {
   state = {
@@ -13,8 +14,10 @@ class Clients extends Component {
 
   getClients = () => {
     fetch('/api/clients')
+      .then(handleErrors)
       .then(res => res.json())
-      .then(clients => this.setState({clients}));
+      .then(clients => this.setState({clients}))
+      .catch(err => console.log(err));
   }
 
   handleChangeClientName = (event) => {

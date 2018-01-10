@@ -1,5 +1,6 @@
 /* global $, toastr */
 import React, { Component } from 'react';
+import { handleErrors } from '../utils/helpers';
 
 class Employees extends Component {
   state = {
@@ -13,8 +14,10 @@ class Employees extends Component {
 
   getEmployees = () => {
     fetch('/api/employees')
+      .then(handleErrors)
       .then(res => res.json())
-      .then(employees => this.setState({ employees }));
+      .then(employees => this.setState({ employees }))
+      .catch(err => console.log(err));
   }
 
   handleChangeEmployeeName = (event) => {

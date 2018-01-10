@@ -6,13 +6,14 @@ LSVT Client Thank You Card Manager
 * [CRA w/ Express in Production](https://daveceddia.com/create-react-app-express-production)
 * [GET & POST w/ Express](https://codeforgeek.com/2014/09/handle-get-post-request-express-4)
 * [Fetch](https://github.com/github/fetch)
+* [Handle The Fetch Properly](https://www.tjvantoll.com/2015/09/13/fetch-and-errors)
 * [REST w/ MongoDB & Mongoose](https://www.youtube.com/watch?v=L1DGbI-U_e4)
 * [Testing React w/ Enzyme](https://medium.com/kevin-salters-blog/testing-react-with-enzyme-fbfc30190e70)
 
 ## To Do
 * setup edit client + employee modals
 * setup alphabetical sorting
-* add fetch error handling
+* setup fuzzy filtering
 * setup stubbed sub-component fetch tests
 * setup import spreadsheet data feature
 * setup matching + timing logic
@@ -20,6 +21,7 @@ LSVT Client Thank You Card Manager
 * setup create history
 
 ## Complete
+* add fetch error handling :+1:
 * setup add client + employee modals :+1:
 * setup mongoDB, mongoose schema + express routes :+1:
 * setup basic component testing w/ enzyme + chai :+1:
