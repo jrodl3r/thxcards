@@ -11,7 +11,7 @@ LSVT Client Thank You Card Manager
 * [Testing React w/ Enzyme](https://medium.com/kevin-salters-blog/testing-react-with-enzyme-fbfc30190e70)
 
 ## To Do
-* setup edit client + employee modals
+* setup delete client / employee
 * setup alphabetical sorting
 * setup fuzzy filtering
 * setup stubbed sub-component fetch tests
@@ -21,6 +21,7 @@ LSVT Client Thank You Card Manager
 * setup create history
 
 ## Complete
+* setup edit client + employee modals :+1:
 * add fetch error handling :+1:
 * setup add client + employee modals :+1:
 * setup mongoDB, mongoose schema + express routes :+1:

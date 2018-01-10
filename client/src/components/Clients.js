@@ -5,7 +5,7 @@ import { handleErrors } from '../utils/helpers';
 class Clients extends Component {
   state = {
     clients: [],
-    activeClient: { name: '', address: '' }
+    activeClient: { id: '', name: '', address: '' }
   }
 
   componentDidMount() {
@@ -20,12 +20,19 @@ class Clients extends Component {
       .catch(err => console.log(err));
   }
 
+  setActiveClient = (client) => {
+    this.setState({activeClient: {id: client._id, name: client.name, address: client.address}});
+    setTimeout(() => {
+      $('#editClientModal input').focus().focus().blur().removeClass('valid invalid');
+    }, 150);
+  }
+
   handleChangeClientName = (event) => {
-    this.setState({activeClient: {name: event.target.value, address: this.state.activeClient.address}});
+    this.setState({activeClient: {id: this.state.activeClient.id, name: event.target.value, address: this.state.activeClient.address}});
   }
 
   handleChangeClientAddress = (event) => {
-    this.setState({activeClient: {name: this.state.activeClient.name, address: event.target.value}});
+    this.setState({activeClient: {id: this.state.activeClient.id, name: this.state.activeClient.name, address: event.target.value}});
   }
 
   handleSubmitNewClient = (event) => {
@@ -40,13 +47,44 @@ class Clients extends Component {
         address: this.state.activeClient.address
       })
     })
-    .then(() => {
-      toastr.success('Added ' + this.state.activeClient.name + ' to Clients');
-      this.setState({activeClient: {name: '', address: ''}});
-      this.getClients();
-      $('#addClientModal').modal('hide');
-      $('#addClientModal input').removeClass('valid invalid');
-    });
+      .then(handleErrors)
+      .then(() => {
+        toastr.success('Added ' + this.state.activeClient.name + ' to Clients');
+        this.setState({activeClient: {name: '', address: ''}});
+        this.getClients();
+        $('#addClientModal').modal('hide');
+        $('#addClientModal input').removeClass('valid invalid');
+      })
+      .catch(err => {
+        toastr.error('Submit Failed (' + this.state.activeClient.name + ')');
+        console.log(err);
+      });
+  }
+
+  handleUpdateClient = (event) => {
+    event.preventDefault();
+    fetch('/api/clients/' + this.state.activeClient.id, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        name: this.state.activeClient.name,
+        address: this.state.activeClient.address
+      })
+    })
+      .then(handleErrors)
+      .then(() => {
+        toastr.success('Client Updated (' + this.state.activeClient.name + ')');
+        this.setState({activeClient: {id: '', name: '', address: ''}});
+        this.getClients();
+        $('#editClientModal').modal('hide');
+        $('#editClientModal input').removeClass('valid invalid');
+      })
+      .catch(err => {
+        toastr.error('Update Failed (' + this.state.activeClient.name + ')');
+        console.log(err);
+      });
   }
 
   render() {
@@ -79,7 +117,8 @@ class Clients extends Component {
                     <td>{client.name}</td>
                     <td>{client.address}</td>
                     <td className="action">
-                      <a href="" title="Edit" data-toggle="modal" data-target="#editClientModal">
+                      <a href="" title="Edit" data-toggle="modal" data-target="#editClientModal"
+                        onClick={() => this.setActiveClient(client)}>
                         <i className="fas fa-lg fa-user blue-grey-text"></i>
                       </a>
                     </td>
@@ -98,13 +137,24 @@ class Clients extends Component {
                       <span aria-hidden="true">&times;</span>
                     </button>
                   </div>
-                  <div className="modal-body">
-                    Edit Client
-                  </div>
-                  <div className="modal-footer blue-grey lighten-5">
-                    <button type="button" className="btn btn-secondary waves-effect" data-dismiss="modal">Cancel</button>
-                    <button type="button" className="btn btn-primary waves-effect">Save</button>
-                  </div>
+                  <form onSubmit={this.handleUpdateClient}>
+                    <div className="modal-body">
+                      <div className="md-form mt-4">
+                        <input type="text" id="clientNameEdit" className="form-control validate" pattern=".{3,}"
+                          value={activeClient.name} onChange={this.handleChangeClientName} required />
+                        <label htmlFor="clientNameEdit" data-error="3 characters minimum" data-success="ok">Name:</label>
+                      </div>
+                      <div className="md-form mt-5 mb-5">
+                        <input type="text" id="clientAddressEdit" className="form-control validate" pattern=".{10,}"
+                          value={activeClient.address} onChange={this.handleChangeClientAddress} required />
+                        <label htmlFor="clientAddressEdit" data-error="10 characters minimum" data-success="ok">Address:</label>
+                      </div>
+                    </div>
+                    <div className="modal-footer blue-grey lighten-5">
+                      <button type="button" className="btn btn-secondary waves-effect" data-dismiss="modal">Cancel</button>
+                      <input type="submit" className="btn btn-primary waves-effect" value="Save" />
+                    </div>
+                  </form>
                 </div>
               </div>
             </div>

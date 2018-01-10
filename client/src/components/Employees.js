@@ -5,7 +5,7 @@ import { handleErrors } from '../utils/helpers';
 class Employees extends Component {
   state = {
     employees: [],
-    activeEmployee: { name: '', email: '' }
+    activeEmployee: { id: '', name: '', email: '' }
   }
 
   componentDidMount() {
@@ -20,12 +20,19 @@ class Employees extends Component {
       .catch(err => console.log(err));
   }
 
+  setActiveEmployee = (employee) => {
+    this.setState({activeEmployee: {id: employee._id, name: employee.name, email: employee.email}});
+    setTimeout(() => {
+      $('#editEmployeeModal input').focus().focus().blur().removeClass('valid invalid');
+    }, 150);
+  }
+
   handleChangeEmployeeName = (event) => {
-    this.setState({activeEmployee: {name: event.target.value, email: this.state.activeEmployee.email}});
+    this.setState({activeEmployee: {id: this.state.activeEmployee.id, name: event.target.value, email: this.state.activeEmployee.email}});
   }
 
   handleChangeEmployeeEmail = (event) => {
-    this.setState({activeEmployee: {name: this.state.activeEmployee.name, email: event.target.value}});
+    this.setState({activeEmployee: {id: this.state.activeEmployee.id, name: this.state.activeEmployee.name, email: event.target.value}});
   }
 
   handleSubmitNewEmployee = (event) => {
@@ -40,13 +47,44 @@ class Employees extends Component {
         email: this.state.activeEmployee.email
       })
     })
-    .then(() => {
-      toastr.success('Added ' + this.state.activeEmployee.name + ' to Employees');
-      this.setState({activeEmployee: {name: '', email: ''}});
-      this.getEmployees();
-      $('#addEmployeeModal').modal('hide');
-      $('#addEmployeeModal input').removeClass('valid invalid');
-    });
+      .then(handleErrors)
+      .then(() => {
+        toastr.success('Added ' + this.state.activeEmployee.name + ' to Employees');
+        this.setState({activeEmployee: {name: '', email: ''}});
+        this.getEmployees();
+        $('#addEmployeeModal').modal('hide');
+        $('#addEmployeeModal input').removeClass('valid invalid');
+      })
+      .catch(err => {
+        toastr.error('Submit Failed (' + this.state.activeEmployee.name + ')');
+        console.log(err);
+      });
+  }
+
+  handleUpdateEmployee = (event) => {
+    event.preventDefault();
+    fetch('/api/employees/' + this.state.activeEmployee.id, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        name: this.state.activeEmployee.name,
+        email: this.state.activeEmployee.email
+      })
+    })
+      .then(handleErrors)
+      .then(() => {
+        toastr.success('Employee Updated (' + this.state.activeEmployee.name + ')');
+        this.setState({activeEmployee: {id: '', name: '', email: ''}});
+        this.getEmployees();
+        $('#editEmployeeModal').modal('hide');
+        $('#editEmployeeModal input').removeClass('valid invalid');
+      })
+      .catch(err => {
+        toastr.error('Update Failed (' + this.state.activeEmployee.name + ')');
+        console.log(err);
+      });
   }
 
   render() {
@@ -79,7 +117,8 @@ class Employees extends Component {
                     <td>{employee.name}</td>
                     <td>{employee.email}</td>
                     <td className="action">
-                      <a href="" title="Edit" data-toggle="modal" data-target="#editEmployeeModal">
+                      <a href="" title="Edit" data-toggle="modal" data-target="#editEmployeeModal"
+                        onClick={() => this.setActiveEmployee(employee)}>
                         <i className="fas fa-lg fa-user blue-grey-text"></i>
                       </a>
                     </td>
@@ -98,13 +137,24 @@ class Employees extends Component {
                       <span aria-hidden="true">&times;</span>
                     </button>
                   </div>
-                  <div className="modal-body">
-                    Edit Employee
-                  </div>
-                  <div className="modal-footer blue-grey lighten-5">
-                    <button type="button" className="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                    <button type="button" className="btn btn-primary">Save</button>
-                  </div>
+                  <form onSubmit={this.handleUpdateEmployee}>
+                    <div className="modal-body">
+                      <div className="md-form mt-4">
+                        <input type="text" id="employeeNameEdit" className="form-control validate" pattern=".{3,}"
+                          value={activeEmployee.name} onChange={this.handleChangeEmployeeName} required />
+                        <label htmlFor="employeeNameEdit" data-error="3 characters minimum" data-success="ok">Name:</label>
+                      </div>
+                      <div className="md-form mt-5 mb-5">
+                        <input type="text" id="employeeEmailEdit" className="form-control validate" pattern=".{10,}"
+                          value={activeEmployee.email} onChange={this.handleChangeEmployeeEmail} required />
+                        <label htmlFor="clientAddressEdit" data-error="10 characters minimum" data-success="ok">Address:</label>
+                      </div>
+                    </div>
+                    <div className="modal-footer blue-grey lighten-5">
+                      <button type="button" className="btn btn-secondary waves-effect" data-dismiss="modal">Cancel</button>
+                      <input type="submit" className="btn btn-primary waves-effect" value="Save" />
+                    </div>
+                  </form>
                 </div>
               </div>
             </div>
