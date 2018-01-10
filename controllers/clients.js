@@ -1,8 +1,4 @@
 const Client = require('../models/client');
-const Joi = require('joi');
-const idSchema = Joi.object().keys({
-  clientID: Joi.string().regex(/^[0-9a-fA-F]{24}$/).required()
-});
 
 module.exports = {
   index: async (req, res, next) => {
@@ -19,8 +15,6 @@ module.exports = {
   },
 
   getClient: async (req, res, next) => {
-    const result = Joi.validate(req.params, idSchema);
-    console.log('result: ', result);
     const { clientID } = req.params;
     const client = await Client.findById(clientID);
     res.status(200).json(client);
@@ -46,6 +40,6 @@ module.exports = {
   },
 
   deleteClient: async (req, res, next) => {
-    
+
   }
 };

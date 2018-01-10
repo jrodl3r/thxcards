@@ -12,5 +12,34 @@ module.exports = {
     const item = await newItem.save();
     res.status(201).json(item);
     // console.log('Saved History Item: ', item);
+  },
+
+  getItem: async (req, res, next) => {
+    const { historyID } = req.params;
+    const item = await History.findById(historyID);
+    res.status(200).json(item);
+    // console.log('Sending History Item: ', item);
+  },
+
+  replaceItem: async (req, res, next) => {
+    // req.body must contain all fields
+    const { historyID } = req.params;
+    const newItem = req.body;
+    const result = await History.findByIdAndUpdate(historyID, newItem);
+    res.status(200).json({ success: true });
+    // console.log('Replaced History Item: ', historyID);
+  },
+
+  updateItem: async (req, res, next) => {
+    // req.body can contain any number of fields
+    const { historyID } = req.params;
+    const newItem = req.body;
+    const result = await History.findByIdAndUpdate(historyID, newItem);
+    res.status(200).json({ success: true });
+    // console.log('Updated History Item: ', historyID);
+  },
+
+  deleteItem: async (req, res, next) => {
+
   }
 };

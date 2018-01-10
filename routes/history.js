@@ -7,4 +7,9 @@ router.route('/')
   .get(HistoryController.index)
   .post(HistoryController.newItem);
 
+router.route('/:historyID')
+  .get(HistoryController.getItem)
+  .put(HistoryController.replaceItem)
+  .patch(HistoryController.updateItem);
+
 module.exports = router;
