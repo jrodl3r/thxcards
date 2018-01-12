@@ -1,7 +1,8 @@
 const express = require('express');
-const logger = require('morgan');
 const mongoose = require('mongoose');
+const basicAuth = require('express-basic-auth');
 const bodyParser = require('body-parser');
+const logger = require('morgan');
 const path = require('path');
 
 const clients = require('./routes/clients');
@@ -12,6 +13,7 @@ const app = express();
 
 // Middlewares
 if (process.env.NODE_ENV === 'development') app.use(logger('dev'));
+if (process.env.NODE_ENV !== 'development') app.use(basicAuth({ users: { 'admin': 'lsvt' } })); // TODO: Make ENV Variable
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 

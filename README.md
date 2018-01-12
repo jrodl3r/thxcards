@@ -20,6 +20,7 @@ LSVT Client Thank You Card Manager
 * setup create history item
 
 ## Complete
+* setup basic authentication :+1:
 * setup delete client / employee :+1:
 * setup edit client + employee modals :+1:
 * add fetch error handling :+1:
