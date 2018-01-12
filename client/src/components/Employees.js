@@ -87,6 +87,29 @@ class Employees extends Component {
       });
   }
 
+  handleRemoveEmployee = (event) => {
+    event.preventDefault();
+    fetch('/api/employees/' + this.state.activeEmployee.id, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ employeeID: this.state.activeEmployee.id })
+    })
+      .then(handleErrors)
+      .then(() => {
+        toastr.success('Employee Removed (' + this.state.activeEmployee.name + ')');
+        this.setState({activeEmployee: {id: '', name: '', email: ''}});
+        this.getEmployees();
+        $('#editEmployeeModal, #removeEmployeeModal').modal('hide');
+        $('#editEmployeeModal input').removeClass('valid invalid');
+      })
+      .catch(err => {
+        toastr.error('Delete Failed (' + this.state.activeEmployee.name + ')');
+        console.log(err);
+      });
+  }
+
   render() {
     const { employees, activeEmployee } = this.state;
 
@@ -117,8 +140,7 @@ class Employees extends Component {
                     <td>{employee.name}</td>
                     <td>{employee.email}</td>
                     <td className="action">
-                      <a href="" title="Edit" data-toggle="modal" data-target="#editEmployeeModal"
-                        onClick={() => this.setActiveEmployee(employee)}>
+                      <a href="" title="Edit" data-toggle="modal" data-target="#editEmployeeModal" onClick={() => this.setActiveEmployee(employee)}>
                         <i className="fas fa-lg fa-user blue-grey-text"></i>
                       </a>
                     </td>
@@ -127,8 +149,7 @@ class Employees extends Component {
                 </tbody>
               </table>
             </div>
-            <div className="modal fade" id="editEmployeeModal" tabIndex="-1" role="dialog"
-              aria-labelledby="editEmployeeModallLabel" aria-hidden="true">
+            <div className="modal fade" id="editEmployeeModal" tabIndex="-1" role="dialog" aria-labelledby="editEmployeeModalLabel" aria-hidden="true">
               <div className="modal-dialog" role="document">
                 <div className="modal-content">
                   <div className="modal-header light-blue darken-1 white-text">
@@ -151,6 +172,7 @@ class Employees extends Component {
                       </div>
                     </div>
                     <div className="modal-footer blue-grey lighten-5">
+                      <p><small><a href="" className="red-text" data-toggle="modal" data-target="#removeEmployeeModal">Remove Employee</a></small></p>
                       <button type="button" className="btn btn-secondary waves-effect" data-dismiss="modal">Cancel</button>
                       <input type="submit" className="btn btn-primary waves-effect" value="Save" />
                     </div>
@@ -192,6 +214,22 @@ class Employees extends Component {
                   <input type="submit" className="btn btn-primary waves-effect" value="Save" />
                 </div>
               </form>
+            </div>
+          </div>
+        </div>
+        <div className="modal fade" id="removeEmployeeModal" tabIndex="-1" role="dialog" aria-labelledby="removeEmployeeModal" aria-hidden="true">
+          <div className="modal-dialog modal-sm modal-notify modal-danger" role="document">
+            <div className="modal-content text-center">
+              <div className="modal-header d-flex justify-content-center">
+                <p className="heading">Are you sure?</p>
+              </div>
+              <div className="modal-body">
+                <i className="fa fa-times fa-4x animated rotateIn"></i>
+              </div>
+              <div className="modal-footer flex-center">
+                <a href="" className="btn btn-outline-secondary-modal" onClick={this.handleRemoveEmployee}>Yes</a>
+                <a type="button" className="btn btn-primary-modal waves-effect" data-dismiss="modal">No</a>
+              </div>
             </div>
           </div>
         </div>

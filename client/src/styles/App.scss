@@ -60,6 +60,19 @@
   }
 }
 
+.modal-footer {
+  p { margin: 0 auto 0 10px !important; }
+
+  a {
+    opacity: .7;
+
+    &:hover {
+      text-decoration: underline;
+      opacity: 1;
+    }
+  }
+}
+
 .App-logo {
   position: relative;
   top: -2px;

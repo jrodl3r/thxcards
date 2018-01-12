@@ -87,6 +87,29 @@ class Clients extends Component {
       });
   }
 
+  handleRemoveClient = (event) => {
+    event.preventDefault();
+    fetch('/api/clients/' + this.state.activeClient.id, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ clientID: this.state.activeClient.id })
+    })
+      .then(handleErrors)
+      .then(() => {
+        toastr.success('Client Removed (' + this.state.activeClient.name + ')');
+        this.setState({activeClient: {id: '', name: '', address: ''}});
+        this.getClients();
+        $('#editClientModal, #removeClientModal').modal('hide');
+        $('#editClientModal input').removeClass('valid invalid');
+      })
+      .catch(err => {
+        toastr.error('Delete Failed (' + this.state.activeClient.name + ')');
+        console.log(err);
+      });
+  }
+
   render() {
     const { clients, activeClient } = this.state;
 
@@ -117,8 +140,7 @@ class Clients extends Component {
                     <td>{client.name}</td>
                     <td>{client.address}</td>
                     <td className="action">
-                      <a href="" title="Edit" data-toggle="modal" data-target="#editClientModal"
-                        onClick={() => this.setActiveClient(client)}>
+                      <a href="" title="Edit" data-toggle="modal" data-target="#editClientModal" onClick={() => this.setActiveClient(client)}>
                         <i className="fas fa-lg fa-user blue-grey-text"></i>
                       </a>
                     </td>
@@ -127,12 +149,11 @@ class Clients extends Component {
                 </tbody>
               </table>
             </div>
-            <div className="modal fade" id="editClientModal" tabIndex="-1" role="dialog"
-              aria-labelledby="editClientModallLabel" aria-hidden="true">
+            <div className="modal fade" id="editClientModal" tabIndex="-1" role="dialog" aria-labelledby="editClientModalLabel" aria-hidden="true">
               <div className="modal-dialog" role="document">
                 <div className="modal-content">
                   <div className="modal-header cyan darken-1 white-text">
-                    <h5 className="modal-title" id="editClientModallLabel">Edit Client</h5>
+                    <h5 className="modal-title" id="editClientModalLabel">Edit Client</h5>
                     <button type="button" className="close white-text" data-dismiss="modal" aria-label="Close">
                       <span aria-hidden="true">&times;</span>
                     </button>
@@ -151,6 +172,7 @@ class Clients extends Component {
                       </div>
                     </div>
                     <div className="modal-footer blue-grey lighten-5">
+                      <p><small><a href="" className="red-text" data-toggle="modal" data-target="#removeClientModal">Remove Client</a></small></p>
                       <button type="button" className="btn btn-secondary waves-effect" data-dismiss="modal">Cancel</button>
                       <input type="submit" className="btn btn-primary waves-effect" value="Save" />
                     </div>
@@ -164,8 +186,7 @@ class Clients extends Component {
             <div className="empty-text">No Items</div>
           </div>
         )}
-        <div className="modal fade" id="addClientModal" tabIndex="-1" role="dialog"
-          aria-labelledby="addClientModallLabel" aria-hidden="true">
+        <div className="modal fade" id="addClientModal" tabIndex="-1" role="dialog" aria-labelledby="addClientModallLabel" aria-hidden="true">
           <div className="modal-dialog" role="document">
             <div className="modal-content">
               <div className="modal-header cyan darken-1 white-text">
@@ -192,6 +213,22 @@ class Clients extends Component {
                   <input type="submit" className="btn btn-primary waves-effect" value="Save" />
                 </div>
               </form>
+            </div>
+          </div>
+        </div>
+        <div className="modal fade" id="removeClientModal" tabIndex="-1" role="dialog" aria-labelledby="removeClientModal" aria-hidden="true">
+          <div className="modal-dialog modal-sm modal-notify modal-danger" role="document">
+            <div className="modal-content text-center">
+              <div className="modal-header d-flex justify-content-center">
+                <p className="heading">Are you sure?</p>
+              </div>
+              <div className="modal-body">
+                <i className="fa fa-times fa-4x animated rotateIn"></i>
+              </div>
+              <div className="modal-footer flex-center">
+                <a href="" className="btn btn-outline-secondary-modal" onClick={this.handleRemoveClient}>Yes</a>
+                <a type="button" className="btn btn-primary-modal waves-effect" data-dismiss="modal">No</a>
+              </div>
             </div>
           </div>
         </div>

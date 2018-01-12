@@ -12,6 +12,7 @@ router.route('/')
 router.route('/:employeeID')
   .get(validateParam(schemas.idSchema, 'employeeID'), EmployeesController.getEmployee)
   .put(validateParam(schemas.idSchema, 'employeeID'), EmployeesController.replaceEmployee)
-  .patch(validateParam(schemas.idSchema, 'employeeID'), EmployeesController.updateEmployee);
+  .patch(validateParam(schemas.idSchema, 'employeeID'), EmployeesController.updateEmployee)
+  .delete(validateParam(schemas.idSchema, 'employeeID'), EmployeesController.deleteEmployee);
 
 module.exports = router;

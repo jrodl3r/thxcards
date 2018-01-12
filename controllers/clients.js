@@ -40,6 +40,9 @@ module.exports = {
   },
 
   deleteClient: async (req, res, next) => {
-
+    const { clientID } = req.params;
+    const result = await Client.remove({ _id: clientID });
+    res.status(200).json({ success: true });
+    // console.log('Deleted Client: ', clientID);
   }
 };

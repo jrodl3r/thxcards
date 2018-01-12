@@ -38,6 +38,9 @@ module.exports = {
   },
 
   deleteEmployee: async (req, res, next) => {
-
+    const { employeeID } = req.params;
+    const result = await Employee.remove({ _id: employeeID });
+    res.status(200).json({ success: true });
+    console.log('Deleted Employee: ', employeeID);
   }
 };
