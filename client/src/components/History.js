@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { handleErrors } from '../utils/helpers';
+import axios from 'axios';
 
 class History extends Component {
   state = { history: [] }
@@ -9,10 +9,8 @@ class History extends Component {
   }
 
   getHistory = () => {
-    fetch('/api/history')
-      .then(handleErrors)
-      .then(res => res.json())
-      .then(history => this.setState({ history }))
+    axios.get('/api/history')
+      .then((res) => this.setState({history: res.data}))
       .catch(err => console.log(err));
   }
 
@@ -39,7 +37,7 @@ class History extends Component {
                 {history.map((item, index) => 
                   <tr key={item._id}>
                     <td className="date">Date</td>
-                    <td className="info">{item.list}</td>
+                    <td className="info">{item.list || 'empty'}</td>
                     <td className="action">
                       <a href="" title="View" data-toggle="modal" data-target="#viewHistoryModal">
                         <i className="fas fa-lg fa-eye blue-grey-text"></i>

@@ -1,6 +1,6 @@
 /* global $, toastr */
 import React, { Component } from 'react';
-import { handleErrors } from '../utils/helpers';
+import axios from 'axios';
 
 class Employees extends Component {
   state = {
@@ -13,10 +13,8 @@ class Employees extends Component {
   }
 
   getEmployees = () => {
-    fetch('/api/employees')
-      .then(handleErrors)
-      .then(res => res.json())
-      .then(employees => this.setState({ employees }))
+    axios.get('/api/employees')
+      .then((res) => this.setState({employees: res.data}))
       .catch(err => console.log(err));
   }
 
@@ -36,19 +34,10 @@ class Employees extends Component {
   }
 
   handleSubmitNewEmployee = (event) => {
+    const newEmployee = { name: this.state.activeEmployee.name, email: this.state.activeEmployee.email };
     event.preventDefault();
-    fetch('/api/employees', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        name: this.state.activeEmployee.name,
-        email: this.state.activeEmployee.email
-      })
-    })
-      .then(handleErrors)
-      .then(() => {
+    axios.post('/api/employees', newEmployee)
+      .then(res => {
         toastr.success('Added ' + this.state.activeEmployee.name + ' to Employees');
         this.setState({activeEmployee: {name: '', email: ''}});
         this.getEmployees();
@@ -62,18 +51,9 @@ class Employees extends Component {
   }
 
   handleUpdateEmployee = (event) => {
+    const updatedEmployee = { name: this.state.activeEmployee.name, email: this.state.activeEmployee.email };
     event.preventDefault();
-    fetch('/api/employees/' + this.state.activeEmployee.id, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        name: this.state.activeEmployee.name,
-        email: this.state.activeEmployee.email
-      })
-    })
-      .then(handleErrors)
+    axios.put('/api/employees/' + this.state.activeEmployee.id, updatedEmployee)
       .then(() => {
         toastr.success('Employee Updated (' + this.state.activeEmployee.name + ')');
         this.setState({activeEmployee: {id: '', name: '', email: ''}});
@@ -89,14 +69,7 @@ class Employees extends Component {
 
   handleRemoveEmployee = (event) => {
     event.preventDefault();
-    fetch('/api/employees/' + this.state.activeEmployee.id, {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ employeeID: this.state.activeEmployee.id })
-    })
-      .then(handleErrors)
+    axios.delete('/api/employees/' + this.state.activeEmployee.id, { employeeID: this.state.activeEmployee.id })
       .then(() => {
         toastr.success('Employee Removed (' + this.state.activeEmployee.name + ')');
         this.setState({activeEmployee: {id: '', name: '', email: ''}});
@@ -137,8 +110,8 @@ class Employees extends Component {
                 <tbody>
                 {employees.map((employee, index) => 
                   <tr key={employee._id}>
-                    <td>{employee.name}</td>
-                    <td>{employee.email}</td>
+                    <td>{employee.name || 'empty'}</td>
+                    <td>{employee.email || 'empty'}</td>
                     <td className="action">
                       <a href="" title="Edit" data-toggle="modal" data-target="#editEmployeeModal" onClick={() => this.setActiveEmployee(employee)}>
                         <i className="fas fa-lg fa-user blue-grey-text"></i>
@@ -168,7 +141,7 @@ class Employees extends Component {
                       <div className="md-form mt-5 mb-5">
                         <input type="text" id="employeeEmailEdit" className="form-control validate" pattern=".{10,}"
                           value={activeEmployee.email} onChange={this.handleChangeEmployeeEmail} required />
-                        <label htmlFor="clientAddressEdit" data-error="10 characters minimum" data-success="ok">Address:</label>
+                        <label htmlFor="employeeEmailEdit" data-error="10 characters minimum" data-success="ok">Address:</label>
                       </div>
                     </div>
                     <div className="modal-footer blue-grey lighten-5">

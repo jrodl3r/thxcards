@@ -1,6 +1,6 @@
 /* global $, toastr */
 import React, { Component } from 'react';
-import { handleErrors } from '../utils/helpers';
+import axios from 'axios';
 
 class Clients extends Component {
   state = {
@@ -13,10 +13,8 @@ class Clients extends Component {
   }
 
   getClients = () => {
-    fetch('/api/clients')
-      .then(handleErrors)
-      .then(res => res.json())
-      .then(clients => this.setState({clients}))
+    axios.get('/api/clients')
+      .then(res => this.setState({clients: res.data}))
       .catch(err => console.log(err));
   }
 
@@ -36,19 +34,10 @@ class Clients extends Component {
   }
 
   handleSubmitNewClient = (event) => {
+    const newClient = { name: this.state.activeClient.name, address: this.state.activeClient.address };
     event.preventDefault();
-    fetch('/api/clients', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        name: this.state.activeClient.name,
-        address: this.state.activeClient.address
-      })
-    })
-      .then(handleErrors)
-      .then(() => {
+    axios.post('/api/clients', newClient)
+      .then(res => {
         toastr.success('Added ' + this.state.activeClient.name + ' to Clients');
         this.setState({activeClient: {name: '', address: ''}});
         this.getClients();
@@ -62,18 +51,9 @@ class Clients extends Component {
   }
 
   handleUpdateClient = (event) => {
+    const updatedClient = { name: this.state.activeClient.name, address: this.state.activeClient.address };
     event.preventDefault();
-    fetch('/api/clients/' + this.state.activeClient.id, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        name: this.state.activeClient.name,
-        address: this.state.activeClient.address
-      })
-    })
-      .then(handleErrors)
+    axios.put('/api/clients/' + this.state.activeClient.id, updatedClient)
       .then(() => {
         toastr.success('Client Updated (' + this.state.activeClient.name + ')');
         this.setState({activeClient: {id: '', name: '', address: ''}});
@@ -89,14 +69,7 @@ class Clients extends Component {
 
   handleRemoveClient = (event) => {
     event.preventDefault();
-    fetch('/api/clients/' + this.state.activeClient.id, {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ clientID: this.state.activeClient.id })
-    })
-      .then(handleErrors)
+    axios.delete('/api/clients/' + this.state.activeClient.id, { clientID: this.state.activeClient.id })
       .then(() => {
         toastr.success('Client Removed (' + this.state.activeClient.name + ')');
         this.setState({activeClient: {id: '', name: '', address: ''}});
@@ -137,8 +110,8 @@ class Clients extends Component {
                 <tbody>
                 {clients.map((client, index) =>
                   <tr key={client._id}>
-                    <td>{client.name}</td>
-                    <td>{client.address}</td>
+                    <td>{client.name || 'empty'}</td>
+                    <td>{client.address || 'empty'}</td>
                     <td className="action">
                       <a href="" title="Edit" data-toggle="modal" data-target="#editClientModal" onClick={() => this.setActiveClient(client)}>
                         <i className="fas fa-lg fa-user blue-grey-text"></i>
