@@ -11,7 +11,6 @@ LSVT Client Thank You Card Manager
 * [Testing React w/ Enzyme](https://medium.com/kevin-salters-blog/testing-react-with-enzyme-fbfc30190e70)
 
 ## To Do
-* setup stubbed fetch testing
 * setup spreadsheet data importing
 * setup alphabetical sorting
 * setup fuzzy filtering

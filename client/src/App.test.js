@@ -1,33 +1,33 @@
 import React from 'react';
 import { shallow } from 'enzyme';
-import { assert } from 'chai';
 
 import App from './App';
 
 describe('ThxCards', () => {
+	let app;
 
-	it('renders the <App /> without crashing', () => {
-	  shallow(<App />);
+	beforeEach(() => {
+		app = shallow(<App />);
+	});
+
+	it('loads the <App /> component', () => {
+		expect(app.length).toBe(1);
 	});
 
 	it('renders the <Nav /> component', () => {
-	  const app = shallow(<App />);
-	  assert.equal(app.find('Nav').length, 1);
+	  expect(app.find('Nav').length).toEqual(1);
 	});
 
 	it('renders the <Clients /> component', () => {
-	  const app = shallow(<App />);
-	  assert.equal(app.find('Clients').length, 1);
+	  expect(app.find('Clients').length).toEqual(1);
 	});
 
 	it('renders the <Employees /> component', () => {
-	  const app = shallow(<App />);
-	  assert.equal(app.find('Employees').length, 1);
+	  expect(app.find('Employees').length).toEqual(1);
 	});
 
 	it('renders the <History /> component', () => {
-	  const app = shallow(<App />);
-	  assert.equal(app.find('History').length, 1);
+	  expect(app.find('History').length).toEqual(1);
 	});
 
 });

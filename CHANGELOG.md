@@ -1,5 +1,6 @@
 # Changelog
 
+* setup stubbed axios testing :+1:
 * setup delete client / employee :+1:
 * setup edit client + employee modals :+1:
 * add fetch error handling :+1:
