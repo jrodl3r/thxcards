@@ -18,3 +18,5 @@ LSVT Client Thank You Card Manager
 * setup mailer system
 * setup create history item
 * setup auth0 authentication
+* setup redux + react router
+* setup codeship automated test + deploy
