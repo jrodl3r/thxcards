@@ -4,72 +4,12 @@
   text-align: center;
   color: $textColor;
 
-  & > .container { transition: .25s ease; }
-  .empty-text { color: $textColorLight; }
-
-  ul {
-    margin: 0;
-    padding: 0;
-    list-style-type: none;
-  }
-}
-
-.card-header {
-  height: 42px;
-  padding: 0 10px 0 15px;
-  line-height: 42px;
-  font-weight: 700;
-  text-align: left;
-  letter-spacing: .65px;
-  text-shadow: 1px 1px rgba(0,0,0, .2);
-  cursor: default;
-
-  a {
-    float: right;
-    text-shadow: none;
-    opacity: .7;
-
-    &:hover {
-      text-shadow: 1px 1px rgba(0,0,0, .2);
-      opacity: 1;
-    }
+  & > .container {
+    transition: .25s ease;
   }
 
-  &.employees-header { background: linear-gradient(40deg, #14dfc0, #6a00de); }
-  &.clients-header { background: linear-gradient(40deg, #0fdac0, #0076de); }
-  &.history-header { background: linear-gradient(40deg, #ba6eff, #3f56c8); }
-}
-
-.modal-header {
-  text-shadow: 1px 1px rgba(0,0,0, .2);
-  border-top-left-radius: 2px;
-  border-top-right-radius: 2px;
-
-  .modal-title {
-    margin-bottom: 0 !important;
-    font-size: 1rem;
-  }
-
-  .close {
-    padding-right: 10px;
-    cursor: pointer;
-  }
-
-  &.secondary-color {
-    background-color: #9239ed !important;
-  }
-}
-
-.modal-footer {
-  p { margin: 0 auto 0 10px !important; }
-
-  a {
-    opacity: .7;
-
-    &:hover {
-      text-decoration: underline;
-      opacity: 1;
-    }
+  .empty-text {
+    color: $textColorLight;
   }
 }
 
@@ -80,8 +20,6 @@
   height: 25px;
   animation: App-logo-spin infinite 20s linear;
 }
-
-.navbar-brand { color: #FFF !important; }
 
 @keyframes App-logo-spin {
   from { transform: rotate(0deg); }

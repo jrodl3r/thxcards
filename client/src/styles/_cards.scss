@@ -1,0 +1,25 @@
+.card-header {
+  height: 42px;
+  padding: 0 10px 0 15px;
+  line-height: 42px;
+  font-weight: 700;
+  text-align: left;
+  letter-spacing: .65px;
+  text-shadow: 1px 1px rgba(0,0,0, .2);
+  cursor: default;
+
+  a {
+    float: right;
+    text-shadow: none;
+    opacity: .7;
+
+    &:hover {
+      text-shadow: 1px 1px rgba(0,0,0, .2);
+      opacity: 1;
+    }
+  }
+
+  &.employees-header { background: linear-gradient(40deg, #14dfc0, #6a00de); }
+  &.clients-header { background: linear-gradient(40deg, #0fdac0, #0076de); }
+  &.history-header { background: linear-gradient(40deg, #ba6eff, #3f56c8); }
+}

@@ -1,0 +1,32 @@
+.modal-header {
+  text-shadow: 1px 1px rgba(0,0,0, .2);
+  border-top-left-radius: 2px;
+  border-top-right-radius: 2px;
+
+  .modal-title {
+    margin-bottom: 0 !important;
+    font-size: 1rem;
+  }
+
+  .close {
+    padding-right: 10px;
+    cursor: pointer;
+  }
+
+  &.secondary-color {
+    background-color: #9239ed !important;
+  }
+}
+
+.modal-footer {
+  p { margin: 0 auto 0 10px !important; }
+
+  a {
+    opacity: .7;
+
+    &:hover {
+      text-decoration: underline;
+      opacity: 1;
+    }
+  }
+}

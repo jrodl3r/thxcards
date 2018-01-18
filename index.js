@@ -10,7 +10,7 @@ const history = require('./routes/history');
 
 const app = express();
 
-// Connect
+// DB
 const mongoURI = process.env.MONGODB_URI || 'mongodb://localhost/thxcards';
 mongoose.Promise = global.Promise;
 mongoose.connect(mongoURI, (err, res) => {
@@ -18,7 +18,7 @@ mongoose.connect(mongoURI, (err, res) => {
   else console.log('Connected to ' + mongoURI);
 });
 
-// Middlewares
+// Middleware
 if (process.env.NODE_ENV === 'development') app.use(logger('dev'));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -36,7 +36,7 @@ app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname + '/client/build/index.html'));
 });
 
-// Go
+// Start
 const port = process.env.PORT || 5000;
 app.listen(port);
 
