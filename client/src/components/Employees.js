@@ -21,7 +21,10 @@ class Employees extends Component {
   setActiveEmployee = (employee) => {
     this.setState({activeEmployee: {id: employee._id, name: employee.name, email: employee.email}});
     setTimeout(() => {
-      $('#editEmployeeModal input').focus().focus().blur().removeClass('valid invalid');
+      $('#editEmployeeModal input').removeClass('validate').focus();
+      setTimeout(() => {
+        $('#editEmployeeModal input').addClass('validate');
+      }, 200);
     }, 150);
   }
 
@@ -146,8 +149,8 @@ class Employees extends Component {
                     </div>
                     <div className="modal-footer blue-grey lighten-5">
                       <p><small><a href="" className="red-text" data-toggle="modal" data-target="#removeEmployeeModal">Remove Employee</a></small></p>
-                      <button type="button" className="btn btn-secondary waves-effect" data-dismiss="modal">Cancel</button>
-                      <input type="submit" className="btn btn-primary waves-effect" value="Save" />
+                      <button type="button" className="btn btn-secondary btn-responsive waves-effect" data-dismiss="modal">Cancel</button>
+                      <input type="submit" className="btn btn-primary btn-responsive waves-effect" value="Save" />
                     </div>
                   </form>
                 </div>
@@ -183,8 +186,8 @@ class Employees extends Component {
                   </div>
                 </div>
                 <div className="modal-footer blue-grey lighten-5">
-                  <button type="button" className="btn btn-secondary waves-effect" data-dismiss="modal">Cancel</button>
-                  <input type="submit" className="btn btn-primary waves-effect" value="Save" />
+                  <button type="button" className="btn btn-secondary btn-responsive waves-effect" data-dismiss="modal">Cancel</button>
+                  <input type="submit" className="btn btn-primary btn-responsive waves-effect" value="Save" />
                 </div>
               </form>
             </div>

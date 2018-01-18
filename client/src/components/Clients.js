@@ -21,7 +21,10 @@ class Clients extends Component {
   setActiveClient = (client) => {
     this.setState({activeClient: {id: client._id, name: client.name, address: client.address}});
     setTimeout(() => {
-      $('#editClientModal input').focus().focus().blur().removeClass('valid invalid');
+      $('#editClientModal input').removeClass('validate').focus();
+      setTimeout(() => {
+        $('#editClientModal input').addClass('validate');
+      }, 200);
     }, 150);
   }
 
@@ -146,8 +149,8 @@ class Clients extends Component {
                     </div>
                     <div className="modal-footer blue-grey lighten-5">
                       <p><small><a href="" className="red-text" data-toggle="modal" data-target="#removeClientModal">Remove Client</a></small></p>
-                      <button type="button" className="btn btn-secondary waves-effect" data-dismiss="modal">Cancel</button>
-                      <input type="submit" className="btn btn-primary waves-effect" value="Save" />
+                      <button type="button" className="btn btn-secondary btn-responsive waves-effect" data-dismiss="modal">Cancel</button>
+                      <input type="submit" className="btn btn-primary btn-responsive waves-effect" value="Save" />
                     </div>
                   </form>
                 </div>
@@ -182,8 +185,8 @@ class Clients extends Component {
                   </div>
                 </div>
                 <div className="modal-footer blue-grey lighten-5">
-                  <button type="button" className="btn btn-secondary waves-effect" data-dismiss="modal">Cancel</button>
-                  <input type="submit" className="btn btn-primary waves-effect" value="Save" />
+                  <button type="button" className="btn btn-secondary btn-responsive waves-effect" data-dismiss="modal">Cancel</button>
+                  <input type="submit" className="btn btn-primary btn-responsive waves-effect" value="Save" />
                 </div>
               </form>
             </div>
