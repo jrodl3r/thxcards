@@ -3,6 +3,7 @@ import Nav from './components/Nav';
 import Clients from './components/Clients';
 import Employees from './components/Employees';
 import History from './components/History';
+import ImportData from './components/ImportData';
 import './styles/App.css';
 
 class App extends Component {
@@ -24,6 +25,7 @@ class App extends Component {
               <History />
             </div>
           </div>
+          <ImportData />
         </div>
       </div>
     );
