@@ -92,16 +92,17 @@ class Clients extends Component {
     const file = event.target.files[0];
     let reader = new FileReader();
 
-    reader.onload = () => {
-      const fileData = reader.result;
-      const wb = XLSX.read(fileData, {type : 'binary'});
-
-      wb.SheetNames.forEach(sheetName => {
-        const sheet = XLSX.utils.sheet_to_json(wb.Sheets[sheetName]);
-        console.log(sheet);
-      });
+    reader.onload = (e) => {
+      const fileData = e.target.result;
+      const wb = XLSX.read(fileData, {type: 'binary'});
+      const ws = wb.Sheets[wb.SheetNames[0]];
+      const data = XLSX.utils.sheet_to_json(ws);
+      console.log(data);
     };
-    reader.readAsBinaryString(file);
+
+    if (file instanceof Blob) {
+      reader.readAsBinaryString(file);
+    }
   }
 
   render() {
@@ -226,7 +227,7 @@ class Clients extends Component {
             </div>
           </div>
         </div>
-        <div className="modal fade" id="importDataModal" tabIndex="-1" role="dialog" aria-labelledby="importDataModallLabel" aria-hidden="true">
+        <div className="modal fade" id="importClientsModal" tabIndex="-1" role="dialog" aria-labelledby="importDataModallLabel" aria-hidden="true">
           <div className="modal-dialog" role="document">
             <div className="modal-content">
               <div className="modal-header cyan darken-1 white-text">
@@ -243,7 +244,7 @@ class Clients extends Component {
                       <input type="file" id="clientImportFile" accept=".xls,.xlsx" onChange={this.handleImportClients} />
                     </div>
                     <div className="file-path-wrapper">
-                      <input className="file-path validate" type="text" placeholder="Upload your Clients.xlsx file" />
+                      <input className="file-path validate" type="text" placeholder="Select your Clients.xlsx file" />
                     </div>
                   </div>
                 </div>
