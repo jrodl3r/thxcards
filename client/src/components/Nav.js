@@ -24,10 +24,10 @@ class Nav extends Component {
               <a className="nav-link" href="" onClick={this.openImportDataModal}>Import Clients</a>
             </li>
             <li className="nav-item">
-              <a className="nav-link" href="">Reset Database</a>
+              <a className="nav-link" href="">Zero Database</a>
             </li>
             <li className="nav-item">
-              <a className="nav-link" href="">Fast-Forward</a>
+              <a className="nav-link" href="">Fast Forward</a>
             </li>
           </ul>
         </div>

@@ -1,6 +1,7 @@
 /* global $, toastr */
 import React, { Component } from 'react';
 import axios from 'axios';
+import XLSX from 'xlsx';
 
 class Clients extends Component {
   state = {
@@ -84,6 +85,23 @@ class Clients extends Component {
         toastr.error('Delete Failed (' + this.state.activeClient.name + ')');
         console.log(err);
       });
+  }
+
+  handleImportClients = (event) => {
+    event.preventDefault();
+    const file = event.target.files[0];
+    let reader = new FileReader();
+
+    reader.onload = () => {
+      const fileData = reader.result;
+      const wb = XLSX.read(fileData, {type : 'binary'});
+
+      wb.SheetNames.forEach(sheetName => {
+        const sheet = XLSX.utils.sheet_to_json(wb.Sheets[sheetName]);
+        console.log(sheet);
+      });
+    };
+    reader.readAsBinaryString(file);
   }
 
   render() {
@@ -205,6 +223,35 @@ class Clients extends Component {
                 <a href="" className="btn btn-outline-secondary-modal" onClick={this.handleRemoveClient}>Yes</a>
                 <a type="button" className="btn btn-primary-modal waves-effect" data-dismiss="modal">No</a>
               </div>
+            </div>
+          </div>
+        </div>
+        <div className="modal fade" id="importDataModal" tabIndex="-1" role="dialog" aria-labelledby="importDataModallLabel" aria-hidden="true">
+          <div className="modal-dialog" role="document">
+            <div className="modal-content">
+              <div className="modal-header cyan darken-1 white-text">
+                <h5 className="modal-title" id="importDataModallLabel">Import Clients</h5>
+                <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true" className="white-text">&times;</span>
+                </button>
+              </div>
+              <form>
+                <div className="modal-body">
+                  <div className="file-field mt-4 mb-4">
+                    <div className="btn btn-primary btn-sm">
+                      <span>Choose file</span>
+                      <input type="file" id="clientImportFile" accept=".xls,.xlsx" onChange={this.handleImportClients} />
+                    </div>
+                    <div className="file-path-wrapper">
+                      <input className="file-path validate" type="text" placeholder="Upload your Clients.xlsx file" />
+                    </div>
+                  </div>
+                </div>
+                <div className="modal-footer blue-grey lighten-5">
+                  <button type="button" className="btn btn-secondary waves-effect" data-dismiss="modal">Cancel</button>
+                  <input type="submit" className="btn btn-primary waves-effect" value="Import" />
+                </div>
+              </form>
             </div>
           </div>
         </div>
