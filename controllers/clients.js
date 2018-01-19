@@ -44,5 +44,14 @@ module.exports = {
     const result = await Client.remove({ _id: clientID });
     res.status(200).json({ success: true });
     // console.log('Deleted Client: ', clientID);
+  },
+
+  diffClients: async (req, res, next) => {
+    const clients = await Client.find({});
+    // TODO
+  },
+
+  importClients: async (req, res, next) => {
+    // TODO
   }
 };
