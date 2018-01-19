@@ -2,6 +2,24 @@ import React, { Component } from 'react';
 import XLSX from 'xlsx';
 
 class ImportData extends Component {
+  state = {}
+
+  handleFile = (event) => {
+    const file = event.target.files[0];
+    let reader = new FileReader();
+
+    reader.onload = () => {
+      var fileData = reader.result;
+      var wb = XLSX.read(fileData, {type : 'binary'});
+
+      wb.SheetNames.forEach(sheetName => {
+        var sheet = XLSX.utils.sheet_to_json(wb.Sheets[sheetName]);
+        console.log(sheet);
+      });
+    };
+    reader.readAsBinaryString(file);
+  }
+
   render() {
     return (
       <div className="modal fade" id="importDataModal" tabIndex="-1" role="dialog" aria-labelledby="importDataModallLabel" aria-hidden="true">
@@ -15,7 +33,7 @@ class ImportData extends Component {
             </div>
             <form>
               <div className="modal-body">
-                TODO
+                <input type="file" accept=".xls,.xlsx" onChange={this.handleFile} />
               </div>
               <div className="modal-footer blue-grey lighten-5">
                 <button type="button" className="btn btn-secondary waves-effect" data-dismiss="modal">Cancel</button>
