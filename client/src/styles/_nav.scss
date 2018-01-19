@@ -2,10 +2,20 @@
   border-radius: 0;
 }
 
+.navbar-nav {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
 .navbar-dark {
   background-color: #243a51;
 }
 
 .navbar-brand {
   color: #FFF !important;
+}
+
+.nav-item:hover {
+  background: #243f5c;
+  border-radius: 4px;
 }

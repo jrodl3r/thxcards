@@ -3,9 +3,16 @@ import React, { Component } from 'react';
 import logo from '../images/logo.svg';
 
 class Nav extends Component {
-  openImportDataModal = (event) => {
+  state = {}
+
+  openImportClientsModal = (event) => {
     event.preventDefault();
-    $('#importDataModal').modal('toggle');
+    $('#importClientsModal').modal('toggle');
+  }
+
+  openImportEmployeesModal = (event) => {
+    event.preventDefault();
+    $('#importEmployeesModal').modal('toggle');
   }
 
   render() {
@@ -21,7 +28,10 @@ class Nav extends Component {
         <div className="collapse navbar-collapse" id="navbarSupportedContent">
           <ul className="navbar-nav mr-auto">
             <li className="nav-item">
-              <a className="nav-link" href="" onClick={this.openImportDataModal}>Import Clients</a>
+              <a className="nav-link" href="" onClick={this.openImportClientsModal}>Import Clients</a>
+            </li>
+            <li className="nav-item">
+              <a className="nav-link" href="" onClick={this.openImportEmployeesModal}>Import Employees</a>
             </li>
             <li className="nav-item">
               <a className="nav-link" href="">Zero Database</a>
