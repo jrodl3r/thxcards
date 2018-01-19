@@ -4,13 +4,13 @@ const bodyParser = require('body-parser');
 const logger = require('morgan');
 const path = require('path');
 
-const clients = require('./routes/clients');
-const employees = require('./routes/employees');
-const history = require('./routes/history');
+const clients = require('./server/routes/clients');
+const employees = require('./server/routes/employees');
+const history = require('./server/routes/history');
 
 const app = express();
 
-// DB
+// Connect
 const mongoURI = process.env.MONGODB_URI || 'mongodb://localhost/thxcards';
 mongoose.Promise = global.Promise;
 mongoose.connect(mongoURI, (err, res) => {
