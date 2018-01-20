@@ -46,12 +46,7 @@ module.exports = {
     // console.log('Deleted Client: ', clientID);
   },
 
-  diffClients: async (req, res, next) => {
-    const clients = await Client.find({});
-    // TODO
-  },
-
   importClients: async (req, res, next) => {
-    // TODO
+    // TODO: Batch Add + Update Clients
   }
 };

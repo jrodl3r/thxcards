@@ -89,15 +89,37 @@ class Clients extends Component {
 
   handleImportClients = (event) => {
     event.preventDefault();
-    const file = event.target.files[0];
     let reader = new FileReader();
+    const file = event.target.files[0];
 
     reader.onload = (e) => {
+      let noErrors = true;
       const fileData = e.target.result;
       const wb = XLSX.read(fileData, {type: 'binary'});
       const ws = wb.Sheets[wb.SheetNames[0]];
-      const data = XLSX.utils.sheet_to_json(ws);
-      console.log(data);
+      const importedClients = XLSX.utils.sheet_to_json(ws);
+
+      if (importedClients !== undefined && importedClients.length) {
+        importedClients.forEach((client, i) => {
+          if (!client.hasOwnProperty('name') || !client.hasOwnProperty('address')) {
+            $('#clientsImportLabel').addClass('red-text').text(`Missing Client Name or Address Field`).parent().removeClass('d-none');
+            $('#clientsImportFile').removeClass('valid').addClass('invalid');
+            noErrors = false;
+          }
+        });
+        if (noErrors) {
+          $('#clientsImportLabel').removeClass('red-text').text(`Importing Client Data`).parent().removeClass('d-none');
+          $('#clientsImportFile').removeClass('invalid').addClass('valid');
+          $('#clientsImportProgress').removeClass('d-none');
+          $('.file-field').addClass('d-none');
+          console.log(importedClients);
+          // TODO: Diff Clients + Show Import Summary
+          
+        }
+      } else {
+        $('#clientsImportLabel').addClass('red-text').text(`Error Reading File`).parent().removeClass('d-none');
+        $('#clientsImportFile').removeClass('valid').addClass('invalid');
+      }
     };
 
     if (file instanceof Blob) {
@@ -241,16 +263,22 @@ class Clients extends Component {
                   <div className="file-field mt-4 mb-4">
                     <div className="btn btn-primary btn-sm">
                       <span>Choose file</span>
-                      <input type="file" id="clientImportFile" accept=".xls,.xlsx" onChange={this.handleImportClients} />
+                      <input type="file" accept=".xls,.xlsx" onChange={this.handleImportClients} />
                     </div>
                     <div className="file-path-wrapper">
-                      <input className="file-path validate" type="text" placeholder="Select your Clients.xlsx file" />
+                      <input className="file-path validate" id="clientsImportFile" type="text" placeholder="Choose your Clients.xlsx file" />
                     </div>
+                  </div>
+                  <div className="form-group mt-4 mb-3 d-none">
+                    <label id="clientsImportLabel" htmlFor="clientsImportFile">Import Client Data</label>
+                  </div>
+                  <div className="progress primary-color mb-4 d-none" id="clientsImportProgress">
+                    <div className="indeterminate"></div>
                   </div>
                 </div>
                 <div className="modal-footer blue-grey lighten-5">
                   <button type="button" className="btn btn-secondary waves-effect" data-dismiss="modal">Cancel</button>
-                  <input type="submit" className="btn btn-primary waves-effect" value="Import" />
+                  <input type="submit" className="btn btn-primary waves-effect" value="Import" disabled />
                 </div>
               </form>
             </div>
