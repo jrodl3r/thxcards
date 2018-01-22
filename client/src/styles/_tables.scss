@@ -51,6 +51,12 @@ table {
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
+
+    &.status {
+      font-weight: 700;
+      text-align: center;
+      text-transform: capitalize;
+    }
   }
 
   thead {

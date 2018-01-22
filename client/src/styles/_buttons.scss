@@ -11,3 +11,7 @@
 .btn[class*=btn-outline-] {
   padding-bottom: 0.66rem !important;
 }
+
+btn.disabled, .btn:disabled {
+  opacity: .3;
+}

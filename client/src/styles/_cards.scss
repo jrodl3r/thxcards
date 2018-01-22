@@ -23,3 +23,10 @@
   &.clients-header { background: linear-gradient(40deg, #0fdac0, #0076de); }
   &.history-header { background: linear-gradient(40deg, #ba6eff, #3f56c8); }
 }
+
+.card {
+  &.clients-summary {
+    box-shadow: none;
+    border: 1px solid #d0d6e3;
+  }
+}

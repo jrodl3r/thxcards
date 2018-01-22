@@ -6,6 +6,7 @@ import XLSX from 'xlsx';
 class Clients extends Component {
   state = {
     clients: [],
+    importedClients: [],
     activeClient: { id: '', name: '', address: '' }
   }
 
@@ -88,36 +89,56 @@ class Clients extends Component {
   }
 
   handleImportClients = (event) => {
-    event.preventDefault();
     let reader = new FileReader();
     const file = event.target.files[0];
 
     reader.onload = (e) => {
       let noErrors = true;
+      let haveImports = false;
       const fileData = e.target.result;
       const wb = XLSX.read(fileData, {type: 'binary'});
       const ws = wb.Sheets[wb.SheetNames[0]];
       const importedClients = XLSX.utils.sheet_to_json(ws);
 
       if (importedClients !== undefined && importedClients.length) {
-        importedClients.forEach((client, i) => {
-          if (!client.hasOwnProperty('name') || !client.hasOwnProperty('address')) {
-            $('#clientsImportLabel').addClass('red-text').text(`Missing Client Name or Address Field`).parent().removeClass('d-none');
+        for (let i = 0; i < importedClients.length; i++) { // Check For Empty Fields
+          if (!importedClients[i].hasOwnProperty('name') || !importedClients[i].hasOwnProperty('address')) {
+            $('#clientsImportLabel').addClass('red-text').text('Missing Client Name or Address Field').parent().removeClass('d-none');
             $('#clientsImportFile').removeClass('valid').addClass('invalid');
             noErrors = false;
+            break;
           }
-        });
-        if (noErrors) {
-          $('#clientsImportLabel').removeClass('red-text').text(`Importing Client Data`).parent().removeClass('d-none');
-          $('#clientsImportFile').removeClass('invalid').addClass('valid');
-          $('#clientsImportProgress').removeClass('d-none');
-          $('.file-field').addClass('d-none');
-          console.log(importedClients);
-          // TODO: Diff Clients + Show Import Summary
-          
+          importedClients[i]._id = i;
+        }
+        if (noErrors) { // Diff Clients + Show Import Summary
+          const activeClients = this.state.clients;
+          importedClients.forEach((importClient) => {
+            for (let i = 0; i < activeClients.length; i++) {
+              if (importClient.name === activeClients[i].name) { // Client Exists
+                if (importClient.address === activeClients[i].address) {
+                  importClient.status = 'same'; // No Change
+                  break;
+                } else {
+                  importClient.status = 'update'; // Update Address
+                  haveImports = true;
+                  break;
+                }
+              } else if (i === activeClients.length - 1) {
+                importClient.status = 'new'; // New Client
+                haveImports = true;
+              }
+            }
+          });
+          this.setState({importedClients: importedClients});
+          if (haveImports) { // Import Ready
+            $('.file-field').addClass('d-none');
+            $('#clientsImportLabel').parent().addClass('d-none');
+            $('#clientsImportSubmit').prop('disabled', false);
+            $('#clientsImportSummary').removeClass('d-none');
+          }
         }
       } else {
-        $('#clientsImportLabel').addClass('red-text').text(`Error Reading File`).parent().removeClass('d-none');
+        $('#clientsImportLabel').addClass('red-text').text('Error Reading File').parent().removeClass('d-none');
         $('#clientsImportFile').removeClass('valid').addClass('invalid');
       }
     };
@@ -127,8 +148,29 @@ class Clients extends Component {
     }
   }
 
+  handleConfirmImport = (event) => {
+    event.preventDefault();
+    $('#clientsImportLabel').removeClass('red-text').text('Importing Client Data').parent().removeClass('d-none');
+    $('#clientsImportFile').removeClass('invalid').addClass('valid');
+    $('#clientsImportProgress').removeClass('d-none');
+    $('#clientsImportSummary, #importClientsModal .modal-footer').addClass('d-none');
+
+    // TODO: axios.post ...
+
+  }
+
+  handleCancelImport = (event) => {
+    $('#importClientsModal').modal('hide');
+    setTimeout(() => {
+      $('#clientsImportLabel').removeClass('red-text green-text').text('').parent().addClass('d-none');
+      $('#clientsImportFile').removeClass('invalid valid');
+      $('#clientsImportSummary, #clientsImportProgress').addClass('d-none');
+      $('#importClientsModal .modal-footer, .file-field').removeClass('d-none');
+    }, 300);
+  }
+
   render() {
-    const { clients, activeClient } = this.state;
+    const { clients, importedClients, activeClient } = this.state;
 
     return (
       <section className="card mb-5">
@@ -258,7 +300,7 @@ class Clients extends Component {
                   <span aria-hidden="true" className="white-text">&times;</span>
                 </button>
               </div>
-              <form>
+              <form onSubmit={this.handleConfirmImport}>
                 <div className="modal-body">
                   <div className="file-field mt-4 mb-4">
                     <div className="btn btn-primary btn-sm">
@@ -270,15 +312,34 @@ class Clients extends Component {
                     </div>
                   </div>
                   <div className="form-group mt-4 mb-3 d-none">
-                    <label id="clientsImportLabel" htmlFor="clientsImportFile">Import Client Data</label>
+                    <label id="clientsImportLabel" htmlFor="clientsImportFile"></label>
                   </div>
-                  <div className="progress primary-color mb-4 d-none" id="clientsImportProgress">
+                  <div className="progress primary-color mb-5 d-none" id="clientsImportProgress">
                     <div className="indeterminate"></div>
                   </div>
+                  {importedClients.length ? (
+                    <div className="card clients-summary mt-3 mb-4" id="clientsImportSummary">
+                      <div className="card-header mdb-color lighten-5 dark-text">Import Summary</div>
+                      <div className="card-body p-0">
+                        <table className="table table-sm table-striped mb-0">
+                          <tbody>
+                          {importedClients.map((client, index) =>
+                            <tr key={index}>
+                              <td>{client.name || 'empty'}</td>
+                              <td>{client.address || 'empty'}</td>
+                              <td className={client.status === 'same' ? 'grey-text status' : 'green-text status'}>{client.status}</td>
+                            </tr>
+                          )}
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  ) : null}
                 </div>
                 <div className="modal-footer blue-grey lighten-5">
-                  <button type="button" className="btn btn-secondary waves-effect" data-dismiss="modal">Cancel</button>
-                  <input type="submit" className="btn btn-primary waves-effect" value="Import" disabled />
+                  <button type="button" className="btn btn-secondary waves-effect" data-dismiss="modal"
+                    onClick={this.handleCancelImport}>Cancel</button>
+                  <input type="submit" className="btn btn-primary waves-effect" id="clientsImportSubmit" value="Import" disabled />
                 </div>
               </form>
             </div>
