@@ -134,7 +134,6 @@ class Clients extends Component {
             $('.file-field').addClass('d-none');
             $('#clientsImportLabel').parent().addClass('d-none');
             $('#clientsImportSubmit').prop('disabled', false);
-            $('#clientsImportSummary').removeClass('d-none');
           }
         }
       } else {
@@ -153,7 +152,7 @@ class Clients extends Component {
     $('#clientsImportLabel').removeClass('red-text').text('Importing Client Data').parent().removeClass('d-none');
     $('#clientsImportFile').removeClass('invalid').addClass('valid');
     $('#clientsImportProgress').removeClass('d-none');
-    $('#clientsImportSummary, #importClientsModal .modal-footer').addClass('d-none');
+    $('#importClientsModal .modal-footer').addClass('d-none');
 
     // TODO: axios.post ...
 
@@ -164,8 +163,9 @@ class Clients extends Component {
     setTimeout(() => {
       $('#clientsImportLabel').removeClass('red-text green-text').text('').parent().addClass('d-none');
       $('#clientsImportFile').removeClass('invalid valid');
-      $('#clientsImportSummary, #clientsImportProgress').addClass('d-none');
+      $('#clientsImportProgress').addClass('d-none');
       $('#importClientsModal .modal-footer, .file-field').removeClass('d-none');
+      this.setState({importedClients: []});
     }, 300);
   }
 
