@@ -110,7 +110,7 @@ class Clients extends Component {
           }
           importedClients[i]._id = i;
         }
-        if (noErrors) { // Diff Clients + Show Import Summary
+        if (noErrors) { // Diff Clients + Show Summary
           const activeClients = this.state.clients;
           importedClients.forEach((importClient) => {
             for (let i = 0; i < activeClients.length; i++) {
@@ -123,7 +123,7 @@ class Clients extends Component {
               }
             }
           });
-          this.setState({importedClients: importedClients});
+          this.setState({importedClients});
           if (haveImports) { // Import Ready
             $('.file-field').addClass('d-none');
             $('#clientsImportLabel').parent().addClass('d-none');
@@ -136,9 +136,8 @@ class Clients extends Component {
       }
     };
 
-    if (file instanceof Blob) {
-      reader.readAsBinaryString(file);
-    }
+    if (file instanceof Blob) { reader.readAsBinaryString(file); }
+    $('#clientsImportForm')[0].reset();
   }
 
   handleConfirmImport = (event) => {
@@ -294,7 +293,7 @@ class Clients extends Component {
                   <span aria-hidden="true" className="white-text">&times;</span>
                 </button>
               </div>
-              <form onSubmit={this.handleConfirmImport}>
+              <form id="clientsImportForm" onSubmit={this.handleConfirmImport}>
                 <div className="modal-body">
                   <div className="file-field mt-4 mb-4">
                     <div className="btn btn-primary btn-sm">
