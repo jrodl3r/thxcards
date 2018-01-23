@@ -115,16 +115,10 @@ class Clients extends Component {
           importedClients.forEach((importClient) => {
             for (let i = 0; i < activeClients.length; i++) {
               if (importClient.name === activeClients[i].name) { // Client Exists
-                if (importClient.address === activeClients[i].address) {
-                  importClient.status = 'same'; // No Change
-                  break;
-                } else {
-                  importClient.status = 'update'; // Update Address
-                  haveImports = true;
-                  break;
-                }
-              } else if (i === activeClients.length - 1) {
-                importClient.status = 'new'; // New Client
+                importClient.status = 'exists';
+                break;
+              } else if (i === activeClients.length - 1) { // New Client
+                importClient.status = 'new';
                 haveImports = true;
               }
             }
@@ -308,7 +302,7 @@ class Clients extends Component {
                       <input type="file" accept=".xls,.xlsx" onChange={this.handleImportClients} />
                     </div>
                     <div className="file-path-wrapper">
-                      <input className="file-path validate" id="clientsImportFile" type="text" placeholder="Choose your Clients.xlsx file" />
+                      <input type="text" className="file-path validate" id="clientsImportFile" placeholder="Choose your Clients.xlsx file" />
                     </div>
                   </div>
                   <div className="form-group mt-4 mb-3 d-none">
@@ -318,21 +312,19 @@ class Clients extends Component {
                     <div className="indeterminate"></div>
                   </div>
                   {importedClients.length ? (
-                    <div className="card clients-summary mt-3 mb-4" id="clientsImportSummary">
-                      <div className="card-header mdb-color lighten-5 dark-text">Import Summary</div>
-                      <div className="card-body p-0">
-                        <table className="table table-sm table-striped mb-0">
-                          <tbody>
-                          {importedClients.map((client, index) =>
-                            <tr key={index}>
-                              <td>{client.name || 'empty'}</td>
-                              <td>{client.address || 'empty'}</td>
-                              <td className={client.status === 'same' ? 'grey-text status' : 'green-text status'}>{client.status}</td>
-                            </tr>
-                          )}
-                          </tbody>
-                        </table>
-                      </div>
+                    <div className="clients-summary mt-3 mb-4" id="clientsImportSummary">
+                      <h6 className="blue-gray-text mb-4">Import Summary</h6>
+                      <table className="table table-sm table-striped mb-0">
+                        <tbody>
+                        {importedClients.map((client, index) =>
+                          <tr key={index}>
+                            <td>{client.name || 'empty'}</td>
+                            <td>{client.address || 'empty'}</td>
+                            <td className={(client.status === 'exists' ? 'grey-text' : 'green-text') + ' status'}>{client.status}</td>
+                          </tr>
+                        )}
+                        </tbody>
+                      </table>
                     </div>
                   ) : null}
                 </div>
