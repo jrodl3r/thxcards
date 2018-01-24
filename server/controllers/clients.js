@@ -47,6 +47,9 @@ module.exports = {
   },
 
   importClients: async (req, res, next) => {
-    // TODO: Batch Add + Update Clients
+    console.log(req.body);
+    res.status(200).json({ success: true });
+
+    // TODO: Batch Add Clients
   }
 };

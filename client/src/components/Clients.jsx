@@ -141,17 +141,35 @@ class Clients extends Component {
   }
 
   handleConfirmImport = (event) => {
+    let newClients = [];
+    const importedClients = this.state.importedClients;
+
     event.preventDefault();
     $('#clientsImportLabel').removeClass('red-text').text('Importing Client Data').parent().removeClass('d-none');
     $('#clientsImportFile').removeClass('invalid').addClass('valid');
     $('#clientsImportProgress').removeClass('d-none');
     $('#importClientsModal .modal-footer').addClass('d-none');
 
-    // TODO: axios.post ...
+    importedClients.forEach(client => {
+      if (client.status === 'new') {
+        newClients.push({name: client.name, address: client.address});
+      }
+    });
 
+    axios.post('/api/clients/import', newClients)
+      .then(res => {
+        toastr.success('Imported New Clients');
+        this.getClients();
+        this.handleDiscardImport();
+        console.log(res);
+      })
+      .catch(err => {
+        toastr.error('Import Failed');
+        console.log(err);
+      });
   }
 
-  handleCancelImport = (event) => {
+  handleDiscardImport = () => {
     $('#importClientsModal').modal('hide');
     setTimeout(() => {
       $('#clientsImportLabel').removeClass('red-text green-text').text('').parent().addClass('d-none');
@@ -316,7 +334,7 @@ class Clients extends Component {
                       <table className="table table-sm table-striped mb-0">
                         <tbody>
                         {importedClients.map((client, index) =>
-                          <tr key={index}>
+                          <tr key={client._id}>
                             <td>{client.name || 'empty'}</td>
                             <td>{client.address || 'empty'}</td>
                             <td className={(client.status === 'exists' ? 'grey-text' : 'green-text') + ' status'}>{client.status}</td>
@@ -329,7 +347,7 @@ class Clients extends Component {
                 </div>
                 <div className="modal-footer blue-grey lighten-5">
                   <button type="button" className="btn btn-secondary waves-effect" data-dismiss="modal"
-                    onClick={this.handleCancelImport}>Cancel</button>
+                    onClick={this.handleDiscardImport}>Cancel</button>
                   <input type="submit" className="btn btn-primary waves-effect" id="clientsImportSubmit" value="Import" disabled />
                 </div>
               </form>

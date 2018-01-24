@@ -10,7 +10,7 @@ router.route('/')
   .post(ClientsController.newClient);
 
 router.route('/import')
-  .put(ClientsController.importClients);
+  .post(ClientsController.importClients);
 
 router.route('/:clientID')
   .get(validateParam(schemas.idSchema, 'clientID'), ClientsController.getClient)
