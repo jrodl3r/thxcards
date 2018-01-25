@@ -54,7 +54,7 @@ class Employees extends Component {
         $('#addEmployeeModal input').removeClass('valid invalid');
       })
       .catch(err => {
-        toastr.error(`Add New Client Failed (${newEmployee.firstname} ${newEmployee.lastname})`);
+        toastr.error(`Add Employee Failed (${newEmployee.firstname} ${newEmployee.lastname})`);
         console.log(err);
       });
   }
@@ -71,7 +71,7 @@ class Employees extends Component {
         $('#editEmployeeModal input').removeClass('valid invalid');
       })
       .catch(err => {
-        toastr.error(`Update Client Failed (${updatedEmployee.firstname} ${updatedEmployee.lastname})`);
+        toastr.error(`Update Employee Failed (${updatedEmployee.firstname} ${updatedEmployee.lastname})`);
         console.log(err);
       });
   }
@@ -81,14 +81,14 @@ class Employees extends Component {
     event.preventDefault();
     axios.delete('/api/employees/' + activeEmployee._id, { employeeID: activeEmployee._id })
       .then(() => {
-        toastr.success(`Employee Removed (${activeEmployee.firstname} ${activeEmployee.lastname})`);
+        toastr.warning(`Employee Removed (${activeEmployee.firstname} ${activeEmployee.lastname})`);
         this.setState({activeEmployee: {_id: '', firstname: '', lastname: '', email: ''}});
         this.getEmployees();
         $('#editEmployeeModal, #removeEmployeeModal').modal('hide');
         $('#editEmployeeModal input').removeClass('valid invalid');
       })
       .catch(err => {
-        toastr.error(`Delete Client Failed (${activeEmployee.firstname} ${activeEmployee.lastname})`);
+        toastr.error(`Delete Employee Failed (${activeEmployee.firstname} ${activeEmployee.lastname})`);
         console.log(err);
       });
   }
@@ -128,11 +128,13 @@ class Employees extends Component {
               }
             }
           });
-          this.setState({importedEmployees});
           if (haveImports) { // Import Ready
+            this.setState({importedEmployees});
             $('.file-field').addClass('d-none');
             $('#employeesImportLabel').parent().addClass('d-none');
             $('#employeesImportSubmit').prop('disabled', false);
+          } else {
+            $('#employeesImportLabel').addClass('red-text').text('No New Employees Found').parent().removeClass('d-none');
           }
         }
       } else {

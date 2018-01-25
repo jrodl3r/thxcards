@@ -7,7 +7,7 @@ class Clients extends Component {
   state = {
     clients: [],
     importedClients: [],
-    activeClient: { id: '', name: '', address: '' }
+    activeClient: { _id: '', name: '', address: '' }
   }
 
   componentDidMount() {
@@ -21,7 +21,7 @@ class Clients extends Component {
   }
 
   setActiveClient = (client) => {
-    this.setState({activeClient: {id: client._id, name: client.name, address: client.address}});
+    this.setState({activeClient: client});
     setTimeout(() => {
       $('#editClientModal input').removeClass('validate').focus();
       setTimeout(() => {
@@ -31,11 +31,11 @@ class Clients extends Component {
   }
 
   handleChangeClientName = (event) => {
-    this.setState({activeClient: {id: this.state.activeClient.id, name: event.target.value, address: this.state.activeClient.address}});
+    this.setState({activeClient: {...this.state.activeClient, name: event.target.value}});
   }
 
   handleChangeClientAddress = (event) => {
-    this.setState({activeClient: {id: this.state.activeClient.id, name: this.state.activeClient.name, address: event.target.value}});
+    this.setState({activeClient: {...this.state.activeClient, address: event.target.value}});
   }
 
   handleSubmitNewClient = (event) => {
@@ -43,47 +43,48 @@ class Clients extends Component {
     event.preventDefault();
     axios.post('/api/clients', newClient)
       .then(res => {
-        toastr.success('Added ' + this.state.activeClient.name + ' to Clients');
-        this.setState({activeClient: {name: '', address: ''}});
+        toastr.success(`Added ${newClient.name} to Clients`);
+        this.setState({activeClient: {_id: '', name: '', address: ''}});
         this.getClients();
         $('#addClientModal').modal('hide');
         $('#addClientModal input').removeClass('valid invalid');
       })
       .catch(err => {
-        toastr.error('Submit Failed (' + this.state.activeClient.name + ')');
+        toastr.error(`Add Client Failed (${newClient.name})`);
         console.log(err);
       });
   }
 
   handleUpdateClient = (event) => {
-    const updatedClient = { name: this.state.activeClient.name, address: this.state.activeClient.address };
+    const updatedClient = this.state.activeClient.name;
     event.preventDefault();
-    axios.put('/api/clients/' + this.state.activeClient.id, updatedClient)
+    axios.put('/api/clients/' + updatedClient._id, updatedClient)
       .then(() => {
-        toastr.success('Client Updated (' + this.state.activeClient.name + ')');
-        this.setState({activeClient: {id: '', name: '', address: ''}});
+        toastr.success(`Client Updated (${updatedClient.name})`);
+        this.setState({activeClient: {_id: '', name: '', address: ''}});
         this.getClients();
         $('#editClientModal').modal('hide');
         $('#editClientModal input').removeClass('valid invalid');
       })
       .catch(err => {
-        toastr.error('Update Failed (' + this.state.activeClient.name + ')');
+        toastr.error(`Update Client Failed (${updatedClient.name})`);
         console.log(err);
       });
   }
 
   handleRemoveClient = (event) => {
+    const activeClient = this.state.activeClient;
     event.preventDefault();
-    axios.delete('/api/clients/' + this.state.activeClient.id, { clientID: this.state.activeClient.id })
+    axios.delete('/api/clients/' + activeClient._id, { clientID: activeClient._id })
       .then(() => {
-        toastr.success('Client Removed (' + this.state.activeClient.name + ')');
-        this.setState({activeClient: {id: '', name: '', address: ''}});
+        toastr.warning(`Client Removed (${activeClient.name})`);
+        this.setState({activeClient: {_id: '', name: '', address: ''}});
         this.getClients();
         $('#editClientModal, #removeClientModal').modal('hide');
         $('#editClientModal input').removeClass('valid invalid');
       })
       .catch(err => {
-        toastr.error('Delete Failed (' + this.state.activeClient.name + ')');
+        toastr.error(`Delete Client Failed (${activeClient.name})`);
         console.log(err);
       });
   }
@@ -123,11 +124,13 @@ class Clients extends Component {
               }
             }
           });
-          this.setState({importedClients});
           if (haveImports) { // Import Ready
+            this.setState({importedClients});
             $('.file-field').addClass('d-none');
             $('#clientsImportLabel').parent().addClass('d-none');
             $('#clientsImportSubmit').prop('disabled', false);
+          } else {
+            $('#clientsImportLabel').addClass('red-text').text('No New Clients Found').parent().removeClass('d-none');
           }
         }
       } else {
