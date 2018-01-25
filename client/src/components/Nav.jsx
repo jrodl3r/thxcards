@@ -18,14 +18,18 @@ class Nav extends Component {
 
   handleZeroDB = (event) => {
     event.preventDefault();
-    axios.get('/api/clients/wipe')
-      .then(res => {
-        toastr.success('Removed All Clients');
-        $('#navbarToggler').addClass('collapsed');
-        $('#navbarSupportedContent').removeClass('show');
-        // TODO: Add Employees + History
-      })
-      .catch(err => console.log(err));
+    axios.all([
+      axios.get('/api/clients/wipe'),
+      axios.get('/api/employees/wipe'),
+      axios.get('/api/history/wipe')
+    ])
+    .then(() => {
+      toastr.success('Database Wiped');
+      $('#navbarToggler').addClass('collapsed');
+      $('#navbarSupportedContent').removeClass('show');
+      // TODO: After Redux is implemented, clear state for components
+    })
+    .catch(err => console.log(err));
   }
 
   render() {

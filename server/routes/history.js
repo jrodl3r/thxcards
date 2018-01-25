@@ -9,6 +9,9 @@ router.route('/')
   .get(HistoryController.index)
   .post(HistoryController.newItem);
 
+router.route('/wipe')
+  .get(HistoryController.wipeHistory);
+
 router.route('/:historyID')
   .get(validateParam(schemas.idSchema, 'historyID'), HistoryController.getItem)
   .put(validateParam(schemas.idSchema, 'historyID'), HistoryController.replaceItem)

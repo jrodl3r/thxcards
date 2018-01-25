@@ -9,6 +9,12 @@ router.route('/')
   .get(EmployeesController.index)
   .post(EmployeesController.newEmployee);
 
+router.route('/import')
+  .post(EmployeesController.importEmployees);
+
+router.route('/wipe')
+  .get(EmployeesController.wipeEmployees);
+
 router.route('/:employeeID')
   .get(validateParam(schemas.idSchema, 'employeeID'), EmployeesController.getEmployee)
   .put(validateParam(schemas.idSchema, 'employeeID'), EmployeesController.replaceEmployee)

@@ -42,5 +42,21 @@ module.exports = {
     const result = await Employee.remove({ _id: employeeID });
     res.status(200).json({ success: true });
     console.log('Deleted Employee: ', employeeID);
+  },
+
+  importEmployees: async (req, res, next) => {
+    const newEmployees = req.body;
+    for (const employee of newEmployees) {
+      const newEmployee = new Employee(employee);
+      await newEmployee.save();
+    }
+    res.status(200).json({ success: true });
+    console.log(`Imported Employees (${newEmployees.length})`);
+  },
+
+  wipeEmployees: async (req, res, next) => {
+    await Employee.collection.drop();
+    res.status(200).json({ success: true });
+    console.log('Deleted Employees');
   }
 };

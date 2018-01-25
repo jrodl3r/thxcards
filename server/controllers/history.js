@@ -37,7 +37,9 @@ module.exports = {
     // console.log('Updated History Item: ', historyID);
   },
 
-  deleteItem: async (req, res, next) => {
-
+  wipeHistory: async (req, res, next) => {
+    await History.collection.drop();
+    res.status(200).json({ success: true });
+    console.log('Deleted History');
   }
 };
