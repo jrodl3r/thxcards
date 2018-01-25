@@ -1,5 +1,4 @@
-/* global $ */
-
-// $(function () {
-//   $('[data-toggle="tooltip"]').tooltip();
-// });
+$(function () {
+  // $('[data-toggle="tooltip"]').tooltip();
+	toastr.options = { positionClass: 'toast-top-center' };
+});
