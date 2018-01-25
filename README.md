@@ -8,15 +8,15 @@ LSVT Client Thank You Card Manager
 * [Fetching w/ Axios](https://github.com/axios/axios)
 * [REST w/ MongoDB & Mongoose](https://www.youtube.com/watch?v=L1DGbI-U_e4)
 * [Testing React w/ Enzyme](https://medium.com/kevin-salters-blog/testing-react-with-enzyme-fbfc30190e70)
-* [Parsing XLSX's](https://github.com/SheetJS/js-xlsx)
 
 ## To Do
-* setup spreadsheet data importing
-* setup alphabetical sorting
-* setup fuzzy filtering
-* setup matching + timing logic
+* setup redux
+* setup data sorting
+* setup data filtering
+* setup timing system
 * setup mailer system
+* setup matching system
 * setup create history item
 * setup auth0 authentication
-* setup redux + react router
+* setup react router
 * setup codeship automated test + deploy
