@@ -41,7 +41,7 @@ module.exports = {
     const { employeeID } = req.params;
     const result = await Employee.remove({ _id: employeeID });
     res.status(200).json({ success: true });
-    console.log('Deleted Employee: ', employeeID);
+    // console.log('Deleted Employee: ', employeeID);
   },
 
   importEmployees: async (req, res, next) => {
@@ -51,12 +51,12 @@ module.exports = {
       await newEmployee.save();
     }
     res.status(200).json({ success: true });
-    console.log(`Imported Employees (${newEmployees.length})`);
+    // console.log(`Imported Employees (${newEmployees.length})`);
   },
 
   wipeEmployees: async (req, res, next) => {
     await Employee.collection.drop();
     res.status(200).json({ success: true });
-    console.log('Deleted Employees');
+    // console.log('Deleted Employees');
   }
 };

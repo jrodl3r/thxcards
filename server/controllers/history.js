@@ -40,6 +40,6 @@ module.exports = {
   wipeHistory: async (req, res, next) => {
     await History.collection.drop();
     res.status(200).json({ success: true });
-    console.log('Deleted History');
+    // console.log('Deleted History');
   }
 };

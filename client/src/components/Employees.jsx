@@ -1,10 +1,12 @@
 /* global $, toastr */
 import React, { Component } from 'react';
 import axios from 'axios';
+import XLSX from 'xlsx';
 
 class Employees extends Component {
   state = {
     employees: [],
+    importedEmployees: [],
     activeEmployee: { id: '', name: '', email: '' }
   }
 
@@ -86,8 +88,101 @@ class Employees extends Component {
       });
   }
 
+  handleImportEmployees = (event) => {
+    let reader = new FileReader();
+    const file = event.target.files[0];
+
+    reader.onload = (e) => {
+      let noErrors = true;
+      let haveImports = false;
+      const fileData = e.target.result;
+      const wb = XLSX.read(fileData, {type: 'binary'});
+      const ws = wb.Sheets[wb.SheetNames[0]];
+      const importedEmployees = XLSX.utils.sheet_to_json(ws);
+
+      if (importedEmployees !== undefined && importedEmployees.length) {
+        for (let i = 0; i < importedEmployees.length; i++) { // Check For Empty Fields
+          if (!importedEmployees[i].hasOwnProperty('name') || !importedEmployees[i].hasOwnProperty('email')) {
+            $('#employeesImportLabel').addClass('red-text').text('Missing Employee Name or Email Field').parent().removeClass('d-none');
+            $('#employeesImportFile').removeClass('valid').addClass('invalid');
+            noErrors = false;
+            break;
+          }
+          importedEmployees[i]._id = i;
+        }
+        if (noErrors) { // Diff Employees + Show Summary
+          const activeEmployees = this.state.employees;
+          importedEmployees.forEach((importEmployee) => {
+            for (let i = 0; i < activeEmployees.length; i++) {
+              if (importEmployee.name === activeEmployees[i].name) { // Employee Exists
+                importEmployee.status = 'exists';
+                break;
+              } else if (i === activeEmployees.length - 1) { // New Employee
+                importEmployee.status = 'new';
+                haveImports = true;
+              }
+            }
+          });
+          this.setState({importedEmployees});
+          if (haveImports) { // Import Ready
+            $('.file-field').addClass('d-none');
+            $('#employeesImportLabel').parent().addClass('d-none');
+            $('#employeesImportSubmit').prop('disabled', false);
+          }
+        }
+      } else {
+        $('#employeesImportLabel').addClass('red-text').text('Error Reading File').parent().removeClass('d-none');
+        $('#employeesImportFile').removeClass('valid').addClass('invalid');
+      }
+    };
+
+    if (file instanceof Blob) { reader.readAsBinaryString(file); }
+    $('#employeesImportForm')[0].reset();
+  }
+
+  handleConfirmImport = (event) => {
+    let newEmployees = [];
+    const importedEmployees = this.state.importedEmployees;
+
+    event.preventDefault();
+    $('#employeesImportLabel').removeClass('red-text').text('Importing Employee Data').parent().removeClass('d-none');
+    $('#employeesImportFile').removeClass('invalid').addClass('valid');
+    $('#employeesImportProgress').removeClass('d-none');
+    $('#importEmployeesModal .modal-footer').addClass('d-none');
+
+    importedEmployees.forEach(employee => {
+      if (employee.status === 'new') {
+        newEmployees.push({name: employee.name, email: employee.email});
+      }
+    });
+
+    axios.post('/api/employees/import', newEmployees)
+      .then(res => {
+        toastr.success('Imported New Employees');
+        this.handleDiscardImport();
+        this.getEmployees();
+        $('#navbarToggler').addClass('collapsed');
+        $('#navbarSupportedContent').removeClass('show');
+      })
+      .catch(err => {
+        toastr.error('Import Failed');
+        console.log(err);
+      });
+  }
+
+  handleDiscardImport = () => {
+    $('#importEmployeesModal').modal('hide');
+    setTimeout(() => {
+      $('#employeesImportLabel').removeClass('red-text green-text').text('').parent().addClass('d-none');
+      $('#employeesImportFile').removeClass('invalid valid');
+      $('#employeesImportProgress').addClass('d-none');
+      $('#importEmployeesModal .modal-footer, .file-field').removeClass('d-none');
+      this.setState({importedEmployees: []});
+    }, 300);
+  }
+
   render() {
-    const { employees, activeEmployee } = this.state;
+    const { employees, importedEmployees, activeEmployee } = this.state;
 
     return (
       <section className="card mb-5">
@@ -144,7 +239,7 @@ class Employees extends Component {
                       <div className="md-form mt-5 mb-5">
                         <input type="text" id="employeeEmailEdit" className="form-control validate" pattern=".{10,}"
                           value={activeEmployee.email} onChange={this.handleChangeEmployeeEmail} required />
-                        <label htmlFor="employeeEmailEdit" data-error="10 characters minimum" data-success="ok">Address:</label>
+                        <label htmlFor="employeeEmailEdit" data-error="10 characters minimum" data-success="ok">Email:</label>
                       </div>
                     </div>
                     <div className="modal-footer blue-grey lighten-5">
@@ -206,6 +301,58 @@ class Employees extends Component {
                 <a href="" className="btn btn-outline-secondary-modal" onClick={this.handleRemoveEmployee}>Yes</a>
                 <a type="button" className="btn btn-primary-modal waves-effect" data-dismiss="modal">No</a>
               </div>
+            </div>
+          </div>
+        </div>
+        <div className="modal fade" id="importEmployeesModal" tabIndex="-1" role="dialog" aria-labelledby="importDataModallLabel" aria-hidden="true">
+          <div className="modal-dialog" role="document">
+            <div className="modal-content">
+              <div className="modal-header cyan darken-1 white-text">
+                <h5 className="modal-title" id="importDataModallLabel">Import Employees</h5>
+                <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true" className="white-text">&times;</span>
+                </button>
+              </div>
+              <form id="employeesImportForm" onSubmit={this.handleConfirmImport}>
+                <div className="modal-body">
+                  <div className="file-field mt-4 mb-4">
+                    <div className="btn btn-primary btn-sm">
+                      <span>Choose file</span>
+                      <input type="file" accept=".xls,.xlsx" onChange={this.handleImportEmployees} />
+                    </div>
+                    <div className="file-path-wrapper">
+                      <input type="text" className="file-path validate" id="employeesImportFile" placeholder="Choose your Employees.xlsx file" />
+                    </div>
+                  </div>
+                  <div className="form-group mt-4 mb-3 d-none">
+                    <label id="employeesImportLabel" htmlFor="employeesImportFile"></label>
+                  </div>
+                  <div className="progress primary-color mb-5 d-none" id="employeesImportProgress">
+                    <div className="indeterminate"></div>
+                  </div>
+                  {importedEmployees.length ? (
+                    <div className="employees-summary mt-3 mb-4" id="employeesImportSummary">
+                      <h6 className="blue-gray-text mb-4">Import Summary</h6>
+                      <table className="table table-sm table-striped mb-0">
+                        <tbody>
+                        {importedEmployees.map((employee, index) =>
+                          <tr key={employee._id}>
+                            <td>{employee.name || 'empty'}</td>
+                            <td>{employee.email || 'empty'}</td>
+                            <td className={(employee.status === 'exists' ? 'grey-text' : 'green-text') + ' status'}>{employee.status}</td>
+                          </tr>
+                        )}
+                        </tbody>
+                      </table>
+                    </div>
+                  ) : null}
+                </div>
+                <div className="modal-footer blue-grey lighten-5">
+                  <button type="button" className="btn btn-secondary waves-effect" data-dismiss="modal"
+                    onClick={this.handleDiscardImport}>Cancel</button>
+                  <input type="submit" className="btn btn-primary waves-effect" id="employeesImportSubmit" value="Import" disabled />
+                </div>
+              </form>
             </div>
           </div>
         </div>
