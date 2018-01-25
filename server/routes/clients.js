@@ -12,6 +12,9 @@ router.route('/')
 router.route('/import')
   .post(ClientsController.importClients);
 
+router.route('/wipe')
+  .get(ClientsController.wipeClients);
+
 router.route('/:clientID')
   .get(validateParam(schemas.idSchema, 'clientID'), ClientsController.getClient)
   .put(validateParam(schemas.idSchema, 'clientID'), ClientsController.replaceClient)

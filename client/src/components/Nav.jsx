@@ -1,5 +1,6 @@
-/* global $ */
+/* global $, toastr */
 import React, { Component } from 'react';
+import axios from 'axios';
 import logo from '../images/logo.svg';
 
 class Nav extends Component {
@@ -13,6 +14,18 @@ class Nav extends Component {
   openImportEmployeesModal = (event) => {
     event.preventDefault();
     $('#importEmployeesModal').modal('toggle');
+  }
+
+  handleZeroDB = (event) => {
+    event.preventDefault();
+    axios.get('/api/clients/wipe')
+      .then(res => {
+        toastr.success('Removed All Clients');
+        $('#navbarToggler').addClass('collapsed');
+        $('#navbarSupportedContent').removeClass('show');
+        // TODO: Add Employees + History
+      })
+      .catch(err => console.log(err));
   }
 
   render() {
@@ -34,7 +47,7 @@ class Nav extends Component {
               <a className="nav-link" href="" onClick={this.openImportEmployeesModal}>Import Employees</a>
             </li>
             <li className="nav-item">
-              <a className="nav-link" href="">Zero Database</a>
+              <a className="nav-link" href="" onClick={this.handleZeroDB}>Zero Database</a>
             </li>
             <li className="nav-item">
               <a className="nav-link" href="">Fast Forward</a>
