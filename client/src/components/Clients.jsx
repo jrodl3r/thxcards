@@ -161,6 +161,8 @@ class Clients extends Component {
         toastr.success('Imported New Clients');
         this.handleDiscardImport();
         this.getClients();
+        $('#navbarToggler').addClass('collapsed');
+        $('#navbarSupportedContent').removeClass('show');
       })
       .catch(err => {
         toastr.error('Import Failed');
