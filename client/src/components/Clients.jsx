@@ -159,9 +159,8 @@ class Clients extends Component {
     axios.post('/api/clients/import', newClients)
       .then(res => {
         toastr.success('Imported New Clients');
-        this.getClients();
         this.handleDiscardImport();
-        console.log(res);
+        this.getClients();
       })
       .catch(err => {
         toastr.error('Import Failed');

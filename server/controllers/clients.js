@@ -47,9 +47,12 @@ module.exports = {
   },
 
   importClients: async (req, res, next) => {
-    console.log(req.body);
+    const newClients = req.body;
+    for (const client of newClients) {
+      const newClient = new Client(client);
+      await newClient.save();
+    }
     res.status(200).json({ success: true });
-
-    // TODO: Batch Add Clients
+    // console.log(`Imported Clients (${newClients.length})`);
   }
 };
