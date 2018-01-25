@@ -55,7 +55,8 @@ module.exports = {
   },
 
   wipeEmployees: async (req, res, next) => {
-    await Employee.collection.drop();
+    const count = await Employee.count({});
+    if (count) { await Employee.collection.drop(); }
     res.status(200).json({ success: true });
     // console.log('Deleted Employees');
   }

@@ -57,7 +57,8 @@ module.exports = {
   },
 
   wipeClients: async (req, res, next) => {
-    await Client.collection.drop();
+    const count = await Client.count({});
+    if (count) { await Client.collection.drop(); }
     res.status(200).json({ success: true });
     // console.log('Deleted Clients');
   }
