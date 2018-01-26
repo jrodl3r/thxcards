@@ -1,5 +1,4 @@
 #toast-container {
-  max-width: 80%;
 
   &.toast-top-center {
     left: 50%;
@@ -7,7 +6,6 @@
   }
 
   & > .toast {
-    max-width: 600px;
     margin-top: 6px !important;
     padding-top: 13px;
     padding-bottom: 14px;

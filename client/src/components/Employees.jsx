@@ -30,6 +30,10 @@ class Employees extends Component {
     }, 150);
   }
 
+  clearActiveEmployee = () => {
+    this.setState({activeEmployee: {_id: '', firstname: '', lastname: '', email: ''}});
+  }
+
   handleChangeEmployeeFirstName = (event) => {
     this.setState({activeEmployee: {...this.state.activeEmployee, firstname: event.target.value}});
   }
@@ -48,7 +52,7 @@ class Employees extends Component {
     axios.post('/api/employees', newEmployee)
       .then(res => {
         toastr.success(`Added ${newEmployee.firstname} ${newEmployee.lastname} to Employees`);
-        this.setState({activeEmployee: {_id: '', firstname: '', lastname: '', email: ''}});
+        this.clearActiveEmployee();
         this.getEmployees();
         $('#addEmployeeModal').modal('hide');
         $('#addEmployeeModal input').removeClass('valid invalid');
@@ -65,7 +69,7 @@ class Employees extends Component {
     axios.put('/api/employees/' + updatedEmployee._id, updatedEmployee)
       .then(() => {
         toastr.success(`Employee Updated (${updatedEmployee.firstname} ${updatedEmployee.lastname})`);
-        this.setState({activeEmployee: {_id: '', firstname: '', lastname: '', email: ''}});
+        this.clearActiveEmployee();
         this.getEmployees();
         $('#editEmployeeModal').modal('hide');
         $('#editEmployeeModal input').removeClass('valid invalid');
@@ -82,7 +86,7 @@ class Employees extends Component {
     axios.delete('/api/employees/' + activeEmployee._id, { employeeID: activeEmployee._id })
       .then(() => {
         toastr.warning(`Employee Removed (${activeEmployee.firstname} ${activeEmployee.lastname})`);
-        this.setState({activeEmployee: {_id: '', firstname: '', lastname: '', email: ''}});
+        this.clearActiveEmployee();
         this.getEmployees();
         $('#editEmployeeModal, #removeEmployeeModal').modal('hide');
         $('#editEmployeeModal input').removeClass('valid invalid');
@@ -232,7 +236,7 @@ class Employees extends Component {
                 <div className="modal-content">
                   <div className="modal-header light-blue darken-1 white-text">
                     <h5 className="modal-title" id="editEmployeeModalLabel">Edit Employee</h5>
-                    <button type="button" className="close white-text" data-dismiss="modal" aria-label="Close">
+                    <button type="button" className="close white-text" data-dismiss="modal" aria-label="Close" onClick={() => this.clearActiveEmployee()}>
                       <span aria-hidden="true">&times;</span>
                     </button>
                   </div>
@@ -255,8 +259,8 @@ class Employees extends Component {
                       </div>
                     </div>
                     <div className="modal-footer blue-grey lighten-5">
-                      <p><small><a href="" className="red-text" data-toggle="modal" data-target="#removeEmployeeModal">Remove Employee</a></small></p>
-                      <button type="button" className="btn btn-secondary btn-responsive waves-effect" data-dismiss="modal">Cancel</button>
+                      <p><small><a href="" className="red-text" data-toggle="modal" data-target="#removeEmployeeModal">Remove</a></small></p>
+                      <button type="button" className="btn btn-secondary btn-responsive waves-effect" data-dismiss="modal" onClick={() => this.clearActiveEmployee()}>Cancel</button>
                       <input type="submit" className="btn btn-primary btn-responsive waves-effect" value="Save" />
                     </div>
                   </form>
@@ -275,7 +279,7 @@ class Employees extends Component {
             <div className="modal-content">
               <div className="modal-header light-blue darken-1 white-text">
                 <h5 className="modal-title" id="addEmployeeModallLabel">Add Employee</h5>
-                <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                <button type="button" className="close" data-dismiss="modal" aria-label="Close" onClick={() => this.clearActiveEmployee()}>
                   <span aria-hidden="true" className="white-text">&times;</span>
                 </button>
               </div>
@@ -298,7 +302,7 @@ class Employees extends Component {
                   </div>
                 </div>
                 <div className="modal-footer blue-grey lighten-5">
-                  <button type="button" className="btn btn-secondary btn-responsive waves-effect" data-dismiss="modal">Cancel</button>
+                  <button type="button" className="btn btn-secondary btn-responsive waves-effect" data-dismiss="modal" onClick={() => this.clearActiveEmployee()}>Cancel</button>
                   <input type="submit" className="btn btn-primary btn-responsive waves-effect" value="Save" />
                 </div>
               </form>

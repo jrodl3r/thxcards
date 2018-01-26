@@ -30,6 +30,10 @@ class Clients extends Component {
     }, 150);
   }
 
+  clearActiveClient = () => {
+    this.setState({activeClient: {_id: '', name: '', address: ''}});
+  }
+
   handleChangeClientName = (event) => {
     this.setState({activeClient: {...this.state.activeClient, name: event.target.value}});
   }
@@ -44,7 +48,7 @@ class Clients extends Component {
     axios.post('/api/clients', newClient)
       .then(res => {
         toastr.success(`Added ${newClient.name} to Clients`);
-        this.setState({activeClient: {_id: '', name: '', address: ''}});
+        this.clearActiveClient();
         this.getClients();
         $('#addClientModal').modal('hide');
         $('#addClientModal input').removeClass('valid invalid');
@@ -56,12 +60,12 @@ class Clients extends Component {
   }
 
   handleUpdateClient = (event) => {
-    const updatedClient = this.state.activeClient.name;
+    const updatedClient = this.state.activeClient;
     event.preventDefault();
     axios.put('/api/clients/' + updatedClient._id, updatedClient)
       .then(() => {
         toastr.success(`Client Updated (${updatedClient.name})`);
-        this.setState({activeClient: {_id: '', name: '', address: ''}});
+        this.clearActiveClient();
         this.getClients();
         $('#editClientModal').modal('hide');
         $('#editClientModal input').removeClass('valid invalid');
@@ -78,7 +82,7 @@ class Clients extends Component {
     axios.delete('/api/clients/' + activeClient._id, { clientID: activeClient._id })
       .then(() => {
         toastr.warning(`Client Removed (${activeClient.name})`);
-        this.setState({activeClient: {_id: '', name: '', address: ''}});
+        this.clearActiveClient();
         this.getClients();
         $('#editClientModal, #removeClientModal').modal('hide');
         $('#editClientModal input').removeClass('valid invalid');
@@ -228,7 +232,7 @@ class Clients extends Component {
                 <div className="modal-content">
                   <div className="modal-header cyan darken-1 white-text">
                     <h5 className="modal-title" id="editClientModalLabel">Edit Client</h5>
-                    <button type="button" className="close white-text" data-dismiss="modal" aria-label="Close">
+                    <button type="button" className="close white-text" data-dismiss="modal" aria-label="Close" onClick={() => this.clearActiveClient()}>
                       <span aria-hidden="true">&times;</span>
                     </button>
                   </div>
@@ -246,8 +250,8 @@ class Clients extends Component {
                       </div>
                     </div>
                     <div className="modal-footer blue-grey lighten-5">
-                      <p><small><a href="" className="red-text" data-toggle="modal" data-target="#removeClientModal">Remove Client</a></small></p>
-                      <button type="button" className="btn btn-secondary btn-responsive waves-effect" data-dismiss="modal">Cancel</button>
+                      <p><small><a href="" className="red-text" data-toggle="modal" data-target="#removeClientModal">Remove</a></small></p>
+                      <button type="button" className="btn btn-secondary btn-responsive waves-effect" data-dismiss="modal" onClick={() => this.clearActiveClient()}>Cancel</button>
                       <input type="submit" className="btn btn-primary btn-responsive waves-effect" value="Save" />
                     </div>
                   </form>
@@ -265,7 +269,7 @@ class Clients extends Component {
             <div className="modal-content">
               <div className="modal-header cyan darken-1 white-text">
                 <h5 className="modal-title" id="addClientModallLabel">Add Client</h5>
-                <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                <button type="button" className="close" data-dismiss="modal" aria-label="Close" onClick={() => this.clearActiveClient()}>
                   <span aria-hidden="true" className="white-text">&times;</span>
                 </button>
               </div>
@@ -283,7 +287,7 @@ class Clients extends Component {
                   </div>
                 </div>
                 <div className="modal-footer blue-grey lighten-5">
-                  <button type="button" className="btn btn-secondary btn-responsive waves-effect" data-dismiss="modal">Cancel</button>
+                  <button type="button" className="btn btn-secondary btn-responsive waves-effect" data-dismiss="modal" onClick={() => this.clearActiveClient()}>Cancel</button>
                   <input type="submit" className="btn btn-primary btn-responsive waves-effect" value="Save" />
                 </div>
               </form>
