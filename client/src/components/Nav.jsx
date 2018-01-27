@@ -1,5 +1,6 @@
 /* global $, toastr */
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
 import logo from '../images/logo.svg';
 
@@ -35,9 +36,9 @@ class Nav extends Component {
   render() {
     return (
       <nav className="navbar navbar-dark mb-5">
-        <a className="navbar-brand" href="">
+        <Link className="navbar-brand" to="/">
           <img src={logo} className="App-logo" alt="logo" />ThxCards
-        </a>
+        </Link>
         <button className="navbar-toggler" id="navbarToggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
           aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span className="navbar-toggler-icon"></span>
@@ -55,6 +56,9 @@ class Nav extends Component {
             </li>
             <li className="nav-item">
               <a className="nav-link" href="">Fast Forward</a>
+            </li>
+            <li className="nav-item">
+              <Link className="nav-link" to="/help">Help</Link>
             </li>
           </ul>
         </div>
