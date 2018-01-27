@@ -4,9 +4,9 @@ const bodyParser = require('body-parser');
 const logger = require('morgan');
 const path = require('path');
 
-const clients = require('./server/routes/clients');
-const employees = require('./server/routes/employees');
-const history = require('./server/routes/history');
+const clients = require('./routes/clients');
+const employees = require('./routes/employees');
+const history = require('./routes/history');
 
 const app = express();
 
