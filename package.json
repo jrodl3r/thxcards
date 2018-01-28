@@ -9,9 +9,9 @@
   "engines": {
     "node": ">=8.9.4"
   },
-  "main": "index.js",
+  "main": "server/index.js",
   "scripts": {
-    "start": "node index.js",
+    "start": "node server/index.js",
     "dev": "NODE_ENV=development nodemon",
     "heroku-postbuild": "cd client && npm install --only=dev && npm install && npm run build"
   },
