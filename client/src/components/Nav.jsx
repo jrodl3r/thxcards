@@ -2,6 +2,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import { closeNav } from '../ui';
 import logo from '../images/logo.svg';
 
 class Nav extends Component {
@@ -26,8 +27,7 @@ class Nav extends Component {
     ])
     .then(() => {
       toastr.success('Database Wiped');
-      $('#navbarToggler').addClass('collapsed');
-      $('#navbarSupportedContent').removeClass('show');
+      closeNav();
       // TODO: After Redux is implemented, clear state for components
     })
     .catch(err => console.log(err));
@@ -58,7 +58,7 @@ class Nav extends Component {
               <a className="nav-link" href="">Fast Forward</a>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to="/help">Help</Link>
+              <Link className="nav-link" to="/help" onClick={closeNav}>Help</Link>
             </li>
           </ul>
         </div>
