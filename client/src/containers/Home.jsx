@@ -1,7 +1,7 @@
 import React from 'react';
 import Clients from '../components/Clients';
-import Employees from '../components/Employees';
-import History from '../components/History';
+// import Employees from '../components/Employees';
+// import History from '../components/History';
 
 const Home = () => (
   <div className="container">
@@ -10,12 +10,12 @@ const Home = () => (
         <Clients />
       </div>
       <div className="col-md-6">
-        <Employees />
+        {/*<Employees />*/}
       </div>
     </div>
     <div className="row">
       <div className="col">
-        <History />
+        {/*<History />*/}
       </div>
     </div>
   </div>

@@ -22,21 +22,19 @@ module.exports = {
   },
 
   replaceClient: async (req, res, next) => {
-    // req.body must contain all fields
     const { clientID } = req.params;
-    const newClient = req.body;
-    const result = await Client.findByIdAndUpdate(clientID, newClient);
-    res.status(200).json({ success: true });
-    // console.log('Replaced Client: ', clientID);
+    const client = req.body;
+    const result = await Client.findByIdAndUpdate(clientID, client);
+    res.status(200).json(client);
+    // console.log('Replaced Client: ', client);
   },
 
   updateClient: async (req, res, next) => {
-    // req.body can contain any number of fields
     const { clientID } = req.params;
-    const newClient = req.body;
-    const result = await Client.findByIdAndUpdate(clientID, newClient);
-    res.status(200).json({ success: true });
-    // console.log('Updated Client: ', clientID);
+    const client = req.body;
+    const result = await Client.findByIdAndUpdate(clientID, client);
+    res.status(200).json(client);
+    // console.log('Updated Client: ', client);
   },
 
   deleteClient: async (req, res, next) => {
