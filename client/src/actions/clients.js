@@ -27,7 +27,6 @@ export const addClient = (client) => {
       .then(res => {
         toastr.success(`Added ${client.name} to Clients`);
         dispatch(addClientSuccess(res.data));
-        dispatch(clearActiveClient());
         closeModal('addClientModal');
       })
       .catch(error => {
@@ -51,7 +50,7 @@ export const updateClient = (client) => {
     axios.put('/api/clients/' + client._id, client)
       .then(res => {
         toastr.success(`Client Updated (${client.name})`);
-        dispatch(updateClientSuccess(res.data));
+        dispatch(updateClientSuccess(client));
         closeModal('editClientModal');
       })
       .catch(error => {
@@ -67,6 +66,32 @@ const updateClientSuccess = (client) => {
 
 const updateClientFailure = (error) => {
   return { type: types.UPDATE_CLIENT_FAILURE, payload: error }
+}
+
+export const removeClient = (client) => {
+  return (dispatch) => {
+    dispatch({type: types.REMOVE_CLIENT});
+    axios.delete('/api/clients/' + client._id, { clientID: client._id })
+      .then(res => {
+        toastr.success(`Client Removed (${client.name})`);
+        dispatch(removeClientSuccess(client));
+        closeModal('editClientModal');
+        closeModal('removeClientModal');
+      })
+      .catch(error => {
+        dispatch(removeClientFailure(error));
+        toastr.error(`Remove Client Failed (${client.name})`);
+      });
+  }
+}
+
+const removeClientSuccess = (client) => {
+  console.log('removeClientSuccess', client);
+  return { type: types.REMOVE_CLIENT_SUCCESS, payload: client }
+}
+
+const removeClientFailure = (error) => {
+  return { type: types.REMOVE_CLIENT_FAILURE, payload: error }
 }
 
 export const setActiveClient = (client) => {

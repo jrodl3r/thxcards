@@ -25,7 +25,7 @@ module.exports = {
     const { clientID } = req.params;
     const client = req.body;
     const result = await Client.findByIdAndUpdate(clientID, client);
-    res.status(200).json(client);
+    res.status(200).json({ success: true });
     // console.log('Replaced Client: ', client);
   },
 
@@ -33,7 +33,7 @@ module.exports = {
     const { clientID } = req.params;
     const client = req.body;
     const result = await Client.findByIdAndUpdate(clientID, client);
-    res.status(200).json(client);
+    res.status(200).json({ success: true });
     // console.log('Updated Client: ', client);
   },
 

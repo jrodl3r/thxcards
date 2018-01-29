@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { resetModal } from '../ui';
-import { getClients, addClient, updateClient, setActiveClient,
+import { getClients, addClient, updateClient, removeClient, setActiveClient,
   setActiveClientName, setActiveClientAddress, clearActiveClient } from '../actions/clients';
 
 class Clients extends Component {
@@ -39,6 +39,12 @@ class Clients extends Component {
     const newClient = { name: this.props.activeClient.name, address: this.props.activeClient.address };
     e.preventDefault();
     this.props.addClient(newClient);
+  }
+
+  removeClient = (e) => {
+    const { activeClient } = this.props;
+    e.preventDefault();
+    this.props.removeClient(activeClient);
   }
 
   render() {
@@ -147,6 +153,22 @@ class Clients extends Component {
             </div>
           </div>
         </div>
+        <div className="modal fade" id="removeClientModal" tabIndex="-1" role="dialog" aria-labelledby="removeClientModal" aria-hidden="true">
+          <div className="modal-dialog modal-sm modal-notify modal-danger" role="document">
+            <div className="modal-content text-center">
+              <div className="modal-header d-flex justify-content-center">
+                <p className="heading">Are you sure?</p>
+              </div>
+              <div className="modal-body">
+                <i className="fa fa-times fa-4x animated rotateIn"></i>
+              </div>
+              <div className="modal-footer flex-center">
+                <a href="" className="btn btn-outline-secondary-modal" onClick={this.removeClient}>Yes</a>
+                <a type="button" className="btn btn-primary-modal waves-effect" data-dismiss="modal">No</a>
+              </div>
+            </div>
+          </div>
+        </div>
       </section>
     );
   }
@@ -154,8 +176,9 @@ class Clients extends Component {
 
 Clients.propTypes = {
   getClients: PropTypes.func.isRequired,
-  updateClient: PropTypes.func.isRequired,
   addClient: PropTypes.func.isRequired,
+  updateClient: PropTypes.func.isRequired,
+  removeClient: PropTypes.func.isRequired,
   setActiveClient: PropTypes.func.isRequired,
   setActiveClientName: PropTypes.func.isRequired,
   setActiveClientAddress: PropTypes.func.isRequired,
@@ -171,8 +194,9 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({
   getClients,
-  updateClient,
   addClient,
+  updateClient,
+  removeClient,
   setActiveClient,
   setActiveClientName,
   setActiveClientAddress,
