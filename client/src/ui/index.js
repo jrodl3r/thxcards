@@ -1,8 +1,7 @@
 /* global $ */
 
 export const closeNav = () => {
-  $('#navbarToggler').addClass('collapsed');
-  $('#navbarSupportedContent').removeClass('show');
+  $('.navbar-collapse').collapse('hide');
 }
 
 export const closeModal = (id) => {
