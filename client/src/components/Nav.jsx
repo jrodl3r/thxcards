@@ -10,11 +10,13 @@ class Nav extends Component {
 
   openImportClientsModal = (event) => {
     event.preventDefault();
+    closeNav();
     $('#importClientsModal').modal('toggle');
   }
 
   openImportEmployeesModal = (event) => {
     event.preventDefault();
+    closeNav();
     $('#importEmployeesModal').modal('toggle');
   }
 
