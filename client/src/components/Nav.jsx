@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-import { closeNav } from '../ui';
+import { closeNav, toggleModal } from '../ui';
 import logo from '../images/logo.svg';
 
 class Nav extends Component {
@@ -11,13 +11,13 @@ class Nav extends Component {
   openImportClientsModal = (event) => {
     event.preventDefault();
     closeNav();
-    $('#importClientsModal').modal('toggle');
+    toggleModal('importClientsModal');
   }
 
   openImportEmployeesModal = (event) => {
     event.preventDefault();
     closeNav();
-    $('#importEmployeesModal').modal('toggle');
+    toggleModal('importEmployeesModal');
   }
 
   handleZeroDB = (event) => {

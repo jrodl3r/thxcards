@@ -17,3 +17,7 @@ export const resetModal = (id) => {
     }, 200);
   }, 150);
 }
+
+export const toggleModal = (id) => {
+  $(`#${id}`).modal('toggle');
+}
