@@ -46,12 +46,14 @@ module.exports = {
 
   importClients: async (req, res, next) => {
     const newClients = req.body;
+    let importedClients = [];
     for (const client of newClients) {
       const newClient = new Client(client);
-      await newClient.save();
+      const result = await newClient.save();
+      importedClients.push(result);
     }
-    res.status(200).json({ success: true });
-    // console.log(`Imported Clients (${newClients.length})`);
+    res.status(200).json(importedClients);
+    console.log(`Imported Clients (${importedClients.length})`);
   },
 
   wipeClients: async (req, res, next) => {

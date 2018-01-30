@@ -3,6 +3,22 @@ import axios from 'axios';
 import { closeModal, resetImportModal } from '../utils/ui';
 import * as types from '../types';
 
+export const setActiveClient = (client) => {
+  return { type: types.SET_ACTIVE_CLIENT, data: client }
+}
+
+export const setActiveClientName = (name) => {
+  return { type: types.SET_ACTIVE_CLIENT_NAME, data: name }
+}
+
+export const setActiveClientAddress = (address) => {
+  return { type: types.SET_ACTIVE_CLIENT_ADDRESS, data: address }
+}
+
+export const clearActiveClient = () => {
+  return { type: types.CLEAR_ACTIVE_CLIENT }
+}
+
 export const getClients = (dispatch) => {
   return (dispatch) => {
     dispatch({ type: types.GET_CLIENTS });
@@ -13,11 +29,11 @@ export const getClients = (dispatch) => {
 }
 
 const getClientsSuccess = (clients) => {
-  return { type: types.GET_CLIENTS_SUCCESS, payload: clients }
+  return { type: types.GET_CLIENTS_SUCCESS, data: clients }
 }
 
 const getClientsFailure = (error) => {
-  return { type: types.GET_CLIENTS_FAILURE, payload: error }
+  return { type: types.GET_CLIENTS_FAILURE, data: error }
 }
 
 export const addClient = (client) => {
@@ -37,11 +53,11 @@ export const addClient = (client) => {
 }
 
 const addClientSuccess = (client) => {
-  return { type: types.ADD_CLIENT_SUCCESS, payload: client }
+  return { type: types.ADD_CLIENT_SUCCESS, data: client }
 }
 
 const addClientFailure = (error) => {
-  return { type: types.UPDATE_CLIENT_FAILURE, payload: error }
+  return { type: types.UPDATE_CLIENT_FAILURE, data: error }
 }
 
 export const updateClient = (client) => {
@@ -61,11 +77,11 @@ export const updateClient = (client) => {
 }
 
 const updateClientSuccess = (client) => {
-  return { type: types.UPDATE_CLIENT_SUCCESS, payload: client }
+  return { type: types.UPDATE_CLIENT_SUCCESS, data: client }
 }
 
 const updateClientFailure = (error) => {
-  return { type: types.UPDATE_CLIENT_FAILURE, payload: error }
+  return { type: types.UPDATE_CLIENT_FAILURE, data: error }
 }
 
 export const removeClient = (client) => {
@@ -86,31 +102,11 @@ export const removeClient = (client) => {
 }
 
 const removeClientSuccess = (client) => {
-  return { type: types.REMOVE_CLIENT_SUCCESS, payload: client }
+  return { type: types.REMOVE_CLIENT_SUCCESS, data: client }
 }
 
 const removeClientFailure = (error) => {
-  return { type: types.REMOVE_CLIENT_FAILURE, payload: error }
-}
-
-export const setActiveClient = (client) => {
-  return { type: types.SET_ACTIVE_CLIENT, payload: client }
-}
-
-export const setActiveClientName = (name) => {
-  return { type: types.SET_ACTIVE_CLIENT_NAME, payload: name }
-}
-
-export const setActiveClientAddress = (address) => {
-  return { type: types.SET_ACTIVE_CLIENT_ADDRESS, payload: address }
-}
-
-export const clearActiveClient = () => {
-  return { type: types.CLEAR_ACTIVE_CLIENT }
-}
-
-export const cacheClientImports = (clients) => {
-  return { type: types.CACHE_CLIENT_IMPORTS, payload: clients }
+  return { type: types.REMOVE_CLIENT_FAILURE, data: error }
 }
 
 export const importClients = (clients) => {
@@ -119,7 +115,7 @@ export const importClients = (clients) => {
     axios.post('/api/clients/import', clients)
       .then(res => {
         toastr.success('Imported New Clients');
-        dispatch(importClientsSuccess(clients));
+        dispatch(importClientsSuccess(res.data));
         closeModal('importClientsModal');
         setTimeout(() => {
           resetImportModal('clients');
@@ -133,9 +129,13 @@ export const importClients = (clients) => {
 }
 
 export const importClientsSuccess = (clients) => {
-  return { type: types.IMPORT_CLIENTS_SUCCESS, payload: clients }
+  return { type: types.IMPORT_CLIENTS_SUCCESS, data: clients }
 }
 
 export const importClientsFailure = (error) => {
-  return { type: types.IMPORT_CLIENTS_FAILURE, payload: error }
+  return { type: types.IMPORT_CLIENTS_FAILURE, data: error }
+}
+
+export const cacheClientImports = (clients) => {
+  return { type: types.CACHE_CLIENT_IMPORTS, data: clients }
 }
