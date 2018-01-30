@@ -38,7 +38,7 @@ class Nav extends Component {
   render() {
     return (
       <nav className="navbar navbar-dark mb-5">
-        <Link className="navbar-brand" to="/">
+        <Link className="navbar-brand" to="/" onClick={closeNav}>
           <img src={logo} className="App-logo" alt="logo" />ThxCards
         </Link>
         <button className="navbar-toggler" id="navbarToggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
