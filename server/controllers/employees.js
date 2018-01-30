@@ -46,12 +46,14 @@ module.exports = {
 
   importEmployees: async (req, res, next) => {
     const newEmployees = req.body;
+    let importedEmployees = [];
     for (const employee of newEmployees) {
       const newEmployee = new Employee(employee);
-      await newEmployee.save();
+      const result = await newEmployee.save();
+      importedEmployees.push(result);
     }
-    res.status(200).json({ success: true });
-    // console.log(`Imported Employees (${newEmployees.length})`);
+    res.status(200).json(importedEmployees);
+    // console.log(`Imported Employees (${importedEmployees.length})`);
   },
 
   wipeEmployees: async (req, res, next) => {

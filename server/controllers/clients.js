@@ -53,7 +53,7 @@ module.exports = {
       importedClients.push(result);
     }
     res.status(200).json(importedClients);
-    console.log(`Imported Clients (${importedClients.length})`);
+    // console.log(`Imported Clients (${importedClients.length})`);
   },
 
   wipeClients: async (req, res, next) => {

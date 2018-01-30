@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 import XLSX from 'xlsx';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { closeModal, clearValidation, resetForm, resetImportModal, importMessage, importError, importShowProgress, hideImportInput } from '../utils/ui';
-import { cacheClientImports, importClients, getClients, addClient, updateClient, removeClient, setActiveClient,
-  setActiveClientName, setActiveClientAddress, clearActiveClient } from '../actions/clients';
+import * as ui from '../utils/ui';
+import { cacheClientImports, importClients, getClients, addClient, updateClient, removeClient,
+  clearActiveClient, setActiveClient, setActiveClientName, setActiveClientAddress } from '../actions/clients';
 
 class Clients extends Component {
   componentWillMount = () => {
@@ -14,12 +14,12 @@ class Clients extends Component {
 
   updateActiveClient = (client) => {
     this.props.setActiveClient(client);
-    clearValidation('editClientModal');
+    ui.clearValidation('editClientModal');
   }
 
   clearActiveClient = () => {
     this.props.clearActiveClient();
-    clearValidation('addClientModal');
+    ui.clearValidation('addClientModal');
   }
 
   updateActiveClientName = (e) => {
@@ -63,7 +63,7 @@ class Clients extends Component {
       if (importItems !== undefined && importItems.length) {
         for (let i = 0; i < importItems.length; i++) { // Check For Emptys
           if (!importItems[i].hasOwnProperty('name') || !importItems[i].hasOwnProperty('address')) {
-            importError('clients', 'Missing Client Name or Address Field');
+            ui.importError('clients', 'Missing Client Name or Address Field');
             noErrors = false;
             break;
           }
@@ -84,14 +84,14 @@ class Clients extends Component {
           });
           if (haveImports) { // Ready
             this.props.cacheClientImports(importItems);
-            hideImportInput('clients');
-          } else { importError('clients', 'No New Clients Found'); }
+            ui.hideImportInput('clients');
+          } else { ui.importError('clients', 'No New Clients Found'); }
         }
-      } else { importError('clients', 'Error Reading File'); }
+      } else { ui.importError('clients', 'Error Reading File'); }
     };
 
     if (file instanceof Blob) { reader.readAsBinaryString(file); }
-    resetForm('clientsImportForm');
+    ui.resetForm('clientsImportForm');
   }
 
   importClients = (e) => {
@@ -99,8 +99,8 @@ class Clients extends Component {
     const importedClients = this.props.importedClients;
 
     e.preventDefault();
-    importMessage('clients', 'Importing Client Data');
-    importShowProgress('clients');
+    ui.importMessage('clients', 'Importing Client Data');
+    ui.importShowProgress('clients');
     importedClients.forEach(client => {
       if (client.status === 'new') {
         newClients.push({name: client.name, address: client.address});
@@ -110,9 +110,9 @@ class Clients extends Component {
   }
 
   discardImport = () => {
-    closeModal('importClientsModal');
+    ui.closeModal('importClientsModal');
     setTimeout(() => {
-      resetImportModal('clients');
+      ui.resetImportModal('clients');
     }, 300);
   }
 
@@ -305,8 +305,9 @@ Clients.propTypes = {
   setActiveClientName: PropTypes.func.isRequired,
   setActiveClientAddress: PropTypes.func.isRequired,
   clearActiveClient: PropTypes.func.isRequired,
-  activeClient: PropTypes.object.isRequired,
-  clients: PropTypes.array.isRequired
+  clients: PropTypes.array.isRequired,
+  importedClients: PropTypes.array.isRequired,
+  activeClient: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({

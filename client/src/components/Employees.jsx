@@ -1,105 +1,61 @@
-/* global $, toastr */
 import React, { Component } from 'react';
-import axios from 'axios';
+import PropTypes from 'prop-types';
 import XLSX from 'xlsx';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import * as ui from '../utils/ui';
+import { cacheEmployeeImports, importEmployees, getEmployees, addEmployee, updateEmployee, removeEmployee, setActiveEmployee,
+  clearActiveEmployee, setActiveEmployeeFirstName, setActiveEmployeeLastName, setActiveEmployeeEmail } from '../actions/employees';
 
 class Employees extends Component {
-  state = {
-    employees: [],
-    importedEmployees: [],
-    activeEmployee: { _id: '', firstname: '', lastname: '', email: '' }
+  componentWillMount = () => {
+    this.props.getEmployees();
   }
 
-  componentDidMount() {
-    this.getEmployees();
-  }
-
-  getEmployees = () => {
-    axios.get('/api/employees')
-      .then((res) => this.setState({employees: res.data}))
-      .catch(err => console.log(err));
-  }
-
-  setActiveEmployee = (employee) => {
-    this.setState({activeEmployee: employee});
-    setTimeout(() => {
-      $('#editEmployeeModal input').removeClass('validate').focus();
-      setTimeout(() => {
-        $('#editEmployeeModal input').addClass('validate');
-      }, 200);
-    }, 150);
+  updateActiveEmployee = (employee) => {
+    this.props.setActiveEmployee(employee);
+    ui.clearValidation('editEmployeeModal');
   }
 
   clearActiveEmployee = () => {
-    this.setState({activeEmployee: {_id: '', firstname: '', lastname: '', email: ''}});
+    this.props.clearActiveEmployee();
+    ui.clearValidation('addEmployeeModal');
   }
 
-  handleChangeEmployeeFirstName = (event) => {
-    this.setState({activeEmployee: {...this.state.activeEmployee, firstname: event.target.value}});
+  updateActiveEmployeeFirstName = (e) => {
+    this.props.setActiveEmployeeFirstName(e.target.value);
   }
 
-  handleChangeEmployeeLastName = (event) => {
-    this.setState({activeEmployee: {...this.state.activeEmployee, lastname: event.target.value}});
+  updateActiveEmployeeLastName = (e) => {
+    this.props.setActiveEmployeeLastName(e.target.value);
   }
 
-  handleChangeEmployeeEmail = (event) => {
-    this.setState({activeEmployee: {...this.state.activeEmployee, email: event.target.value}});
+  updateActiveEmployeeEmail = (e) => {
+    this.props.setActiveEmployeeEmail(e.target.value);
   }
 
-  handleSubmitNewEmployee = (event) => {
-    const newEmployee = { firstname: this.state.activeEmployee.firstname, lastname: this.state.activeEmployee.lastname, email: this.state.activeEmployee.email };
-    event.preventDefault();
-    axios.post('/api/employees', newEmployee)
-      .then(res => {
-        toastr.success(`Added ${newEmployee.firstname} ${newEmployee.lastname} to Employees`);
-        this.clearActiveEmployee();
-        this.getEmployees();
-        $('#addEmployeeModal').modal('hide');
-        $('#addEmployeeModal input').removeClass('valid invalid');
-      })
-      .catch(err => {
-        toastr.error(`Add Employee Failed (${newEmployee.firstname} ${newEmployee.lastname})`);
-        console.log(err);
-      });
+  updateEmployee = (e) => {
+    const { activeEmployee } = this.props;
+    e.preventDefault();
+    this.props.updateEmployee(activeEmployee);
   }
 
-  handleUpdateEmployee = (event) => {
-    const updatedEmployee = this.state.activeEmployee;
-    event.preventDefault();
-    axios.put('/api/employees/' + updatedEmployee._id, updatedEmployee)
-      .then(() => {
-        toastr.success(`Employee Updated (${updatedEmployee.firstname} ${updatedEmployee.lastname})`);
-        this.clearActiveEmployee();
-        this.getEmployees();
-        $('#editEmployeeModal').modal('hide');
-        $('#editEmployeeModal input').removeClass('valid invalid');
-      })
-      .catch(err => {
-        toastr.error(`Update Employee Failed (${updatedEmployee.firstname} ${updatedEmployee.lastname})`);
-        console.log(err);
-      });
+  addEmployee = (e) => {
+    const activeEmployee = this.props.activeEmployee;
+    const newEmployee = { firstname: activeEmployee.firstname, lastname: activeEmployee.lastname, email: activeEmployee.email };
+    e.preventDefault();
+    this.props.addEmployee(newEmployee);
   }
 
-  handleRemoveEmployee = (event) => {
-    const activeEmployee = this.state.activeEmployee;
-    event.preventDefault();
-    axios.delete('/api/employees/' + activeEmployee._id, { employeeID: activeEmployee._id })
-      .then(() => {
-        toastr.warning(`Employee Removed (${activeEmployee.firstname} ${activeEmployee.lastname})`);
-        this.clearActiveEmployee();
-        this.getEmployees();
-        $('#editEmployeeModal, #removeEmployeeModal').modal('hide');
-        $('#editEmployeeModal input').removeClass('valid invalid');
-      })
-      .catch(err => {
-        toastr.error(`Delete Employee Failed (${activeEmployee.firstname} ${activeEmployee.lastname})`);
-        console.log(err);
-      });
+  removeEmployee = (e) => {
+    const { activeEmployee } = this.props;
+    e.preventDefault();
+    this.props.removeEmployee(activeEmployee);
   }
 
-  handleImportEmployees = (event) => {
+  cacheEmployeeImports = (e) => {
     let reader = new FileReader();
-    const file = event.target.files[0];
+    const file = e.target.files[0];
 
     reader.onload = (e) => {
       let noErrors = true;
@@ -107,99 +63,72 @@ class Employees extends Component {
       const fileData = e.target.result;
       const wb = XLSX.read(fileData, {type: 'binary'});
       const ws = wb.Sheets[wb.SheetNames[0]];
-      const importedEmployees = XLSX.utils.sheet_to_json(ws);
+      const importItems = XLSX.utils.sheet_to_json(ws);
 
-      if (importedEmployees !== undefined && importedEmployees.length) {
-        for (let i = 0; i < importedEmployees.length; i++) { // Check For Empty Fields
-          if (!importedEmployees[i].hasOwnProperty('firstname') || !importedEmployees[i].hasOwnProperty('lastname') || !importedEmployees[i].hasOwnProperty('email')) {
-            $('#employeesImportLabel').addClass('red-text').text('Missing Employee Name or Email Field').parent().removeClass('d-none');
-            $('#employeesImportFile').removeClass('valid').addClass('invalid');
+      if (importItems !== undefined && importItems.length) {
+        for (let i = 0; i < importItems.length; i++) { // Check For Emptys
+          if (!importItems[i].hasOwnProperty('firstname') || !importItems[i].hasOwnProperty('lastname') || !importItems[i].hasOwnProperty('email')) {
+            ui.importError('employees', 'Missing Employee Name or Email Field');
             noErrors = false;
             break;
           }
-          importedEmployees[i]._id = i;
+          importItems[i]._id = i;
         }
-        if (noErrors) { // Diff Employees + Show Summary
-          const activeEmployees = this.state.employees;
-          importedEmployees.forEach((importEmployee) => {
+        if (noErrors) { // Diff + Show Summary
+          const activeEmployees = this.props.employees;
+          importItems.forEach(item => {
             for (let i = 0; i < activeEmployees.length; i++) {
-              if (importEmployee.firstname === activeEmployees[i].firstname && importEmployee.lastname === activeEmployees[i].lastname) { // Employee Exists
-                importEmployee.status = 'exists';
+              if (item.firstname === activeEmployees[i].firstname && item.lastname === activeEmployees[i].lastname) { // Exists
+                item.status = 'exists';
                 break;
-              } else if (i === activeEmployees.length - 1) { // New Employee
-                importEmployee.status = 'new';
+              } else if (i === activeEmployees.length - 1) { // New
+                item.status = 'new';
                 haveImports = true;
               }
             }
           });
-          if (haveImports) { // Import Ready
-            this.setState({importedEmployees});
-            $('.file-field').addClass('d-none');
-            $('#employeesImportLabel').parent().addClass('d-none');
-            $('#employeesImportSubmit').prop('disabled', false);
-          } else {
-            $('#employeesImportLabel').addClass('red-text').text('No New Employees Found').parent().removeClass('d-none');
-          }
+          if (haveImports) { // Ready
+            this.props.cacheEmployeeImports(importItems);
+            ui.hideImportInput('employees');
+          } else { ui.importError('employees', 'No New Employees Found'); }
         }
-      } else {
-        $('#employeesImportLabel').addClass('red-text').text('Error Reading File').parent().removeClass('d-none');
-        $('#employeesImportFile').removeClass('valid').addClass('invalid');
-      }
+      } else { ui.importError('employees', 'Error Reading File'); }
     };
 
     if (file instanceof Blob) { reader.readAsBinaryString(file); }
-    $('#employeesImportForm')[0].reset();
+    ui.resetForm('employeesImportForm');
   }
 
-  handleConfirmImport = (event) => {
+  importEmployees = (e) => {
     let newEmployees = [];
-    const importedEmployees = this.state.importedEmployees;
+    const importedEmployees = this.props.importedEmployees;
 
-    event.preventDefault();
-    $('#employeesImportLabel').removeClass('red-text').text('Importing Employee Data').parent().removeClass('d-none');
-    $('#employeesImportFile').removeClass('invalid').addClass('valid');
-    $('#employeesImportProgress').removeClass('d-none');
-    $('#importEmployeesModal .modal-footer').addClass('d-none');
-
+    e.preventDefault();
+    ui.importMessage('employees', 'Importing Employee Data');
+    ui.importShowProgress('employees');
     importedEmployees.forEach(employee => {
       if (employee.status === 'new') {
         newEmployees.push({firstname: employee.firstname, lastname: employee.lastname, email: employee.email});
       }
     });
-
-    axios.post('/api/employees/import', newEmployees)
-      .then(res => {
-        toastr.success('Imported New Employees');
-        this.handleDiscardImport();
-        this.getEmployees();
-        $('#navbarToggler').addClass('collapsed');
-        $('#navbarSupportedContent').removeClass('show');
-      })
-      .catch(err => {
-        toastr.error('Import Failed');
-        console.log(err);
-      });
+    this.props.importEmployees(newEmployees);
   }
 
-  handleDiscardImport = () => {
-    $('#importEmployeesModal').modal('hide');
+  discardImport = () => {
+    ui.closeModal('importEmployeesModal');
     setTimeout(() => {
-      $('#employeesImportLabel').removeClass('red-text green-text').text('').parent().addClass('d-none');
-      $('#employeesImportFile').removeClass('invalid valid');
-      $('#employeesImportProgress').addClass('d-none');
-      $('#importEmployeesModal .modal-footer, .file-field').removeClass('d-none');
-      this.setState({importedEmployees: []});
+      ui.resetImportModal('employees');
     }, 300);
   }
 
   render() {
-    const { employees, importedEmployees, activeEmployee } = this.state;
+    const { employees, importedEmployees, activeEmployee } = this.props;
 
     return (
       <section className="card mb-5">
         <div className="card-header employees-header white-text">
           Employees
-          <a href="" title="Add Employee" data-toggle="modal" data-target="#addEmployeeModal">
+          <a href="" title="Add Employee" data-toggle="modal" data-target="#addEmployeeModal" onClick={this.clearActiveEmployee}>
             <i className="fas fa-lg fa-user-plus white-text"></i>
           </a>
         </div>
@@ -209,7 +138,7 @@ class Employees extends Component {
               <thead>
                 <tr className="mdb-color lighten-5 blue-grey-text">
                   <th>Name</th>
-                  <th>Email</th>
+                  <th>Address</th>
                   <th className="action"></th>
                 </tr>
               </thead>
@@ -217,12 +146,12 @@ class Employees extends Component {
             <div className="table-wrapper table-fixed-header">
               <table className="table table-sm table-striped mb-0">
                 <tbody>
-                {employees.map((employee, index) => 
+                {employees.map((employee, index) =>
                   <tr key={employee._id}>
-                    <td>{employee.lastname + ', ' + employee.firstname || 'empty'}</td>
+                    <td>{`${employee.lastname}, ${employee.firstname}` || 'empty'}</td>
                     <td>{employee.email || 'empty'}</td>
                     <td className="action">
-                      <a href="" title="Edit" data-toggle="modal" data-target="#editEmployeeModal" onClick={() => this.setActiveEmployee(employee)}>
+                      <a href="" title="Edit" data-toggle="modal" data-target="#editEmployeeModal" onClick={() => this.updateActiveEmployee(employee)}>
                         <i className="fas fa-lg fa-user blue-grey-text"></i>
                       </a>
                     </td>
@@ -231,78 +160,77 @@ class Employees extends Component {
                 </tbody>
               </table>
             </div>
-            <div className="modal fade" id="editEmployeeModal" tabIndex="-1" role="dialog" aria-labelledby="editEmployeeModalLabel" aria-hidden="true">
-              <div className="modal-dialog" role="document">
-                <div className="modal-content">
-                  <div className="modal-header light-blue darken-1 white-text">
-                    <h5 className="modal-title" id="editEmployeeModalLabel">Edit Employee</h5>
-                    <button type="button" className="close white-text" data-dismiss="modal" aria-label="Close" onClick={() => this.clearActiveEmployee()}>
-                      <span aria-hidden="true">&times;</span>
-                    </button>
-                  </div>
-                  <form onSubmit={this.handleUpdateEmployee}>
-                    <div className="modal-body">
-                      <div className="md-form mt-4">
-                        <input type="text" id="employeeFirstNameEdit" className="form-control validate" pattern=".{3,}"
-                          value={activeEmployee.firstname} onChange={this.handleChangeEmployeeFirstName} required />
-                        <label htmlFor="employeeFirstNameEdit" data-error="3 characters minimum" data-success="ok">First Name:</label>
-                      </div>
-                      <div className="md-form mt-5">
-                        <input type="text" id="employeeLastNameEdit" className="form-control validate" pattern=".{3,}"
-                          value={activeEmployee.lastname} onChange={this.handleChangeEmployeeLastName} required />
-                        <label htmlFor="employeeLastNameEdit" data-error="3 characters minimum" data-success="ok">Last Name:</label>
-                      </div>
-                      <div className="md-form mt-5 mb-5">
-                        <input type="text" id="employeeEmailEdit" className="form-control validate" pattern=".{7,}"
-                          value={activeEmployee.email} onChange={this.handleChangeEmployeeEmail} required />
-                        <label htmlFor="employeeEmailEdit" data-error="7 characters minimum" data-success="ok">Email:</label>
-                      </div>
-                    </div>
-                    <div className="modal-footer blue-grey lighten-5">
-                      <p><small><a href="" className="red-text" data-toggle="modal" data-target="#removeEmployeeModal">Remove</a></small></p>
-                      <button type="button" className="btn btn-secondary btn-responsive waves-effect" data-dismiss="modal" onClick={() => this.clearActiveEmployee()}>Cancel</button>
-                      <input type="submit" className="btn btn-primary btn-responsive waves-effect" value="Save" />
-                    </div>
-                  </form>
-                </div>
-              </div>
-            </div>
           </div>
         ) : (
           <div className="card-body">
             <div className="empty-text">No Items</div>
           </div>
         )}
-        <div className="modal fade" id="addEmployeeModal" tabIndex="-1" role="dialog"
-          aria-labelledby="addEmployeeModallLabel" aria-hidden="true">
+        <div className="modal fade" id="editEmployeeModal" tabIndex="-1" role="dialog" aria-labelledby="editEmployeeModalLabel" aria-hidden="true">
           <div className="modal-dialog" role="document">
             <div className="modal-content">
-              <div className="modal-header light-blue darken-1 white-text">
+              <div className="modal-header cyan darken-1 white-text">
+                <h5 className="modal-title" id="editEmployeeModalLabel">Edit Employee</h5>
+                <button type="button" className="close white-text" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <form onSubmit={this.updateEmployee}>
+                <div className="modal-body">
+                  <div className="md-form mt-4">
+                    <input type="text" id="employeeFirstNameEdit" className="form-control validate" pattern=".{3,}"
+                      value={activeEmployee.firstname} onChange={this.updateActiveEmployeeFirstName} required />
+                    <label htmlFor="employeeFirstNameEdit" data-error="3 characters minimum" data-success="ok">First Name:</label>
+                  </div>
+                  <div className="md-form mt-5">
+                    <input type="text" id="employeeLastNameEdit" className="form-control validate" pattern=".{3,}"
+                      value={activeEmployee.lastname} onChange={this.updateActiveEmployeeLastName} required />
+                    <label htmlFor="employeeLastNameEdit" data-error="3 characters minimum" data-success="ok">Last Name:</label>
+                  </div>
+                  <div className="md-form mt-5 mb-5">
+                    <input type="text" id="employeeEmailEdit" className="form-control validate" pattern=".{7,}"
+                      value={activeEmployee.email} onChange={this.updateActiveEmployeeEmail} required />
+                    <label htmlFor="employeeEmailEdit" data-error="7 characters minimum" data-success="ok">Email:</label>
+                  </div>
+                </div>
+                <div className="modal-footer blue-grey lighten-5">
+                  <p><small><a className="red-text" data-toggle="modal" data-target="#removeEmployeeModal">Remove</a></small></p>
+                  <button type="button" className="btn btn-secondary btn-responsive waves-effect" data-dismiss="modal">Cancel</button>
+                  <input type="submit" className="btn btn-primary btn-responsive waves-effect" value="Save" />
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+        <div className="modal fade" id="addEmployeeModal" tabIndex="-1" role="dialog" aria-labelledby="addEmployeeModallLabel" aria-hidden="true">
+          <div className="modal-dialog" role="document">
+            <div className="modal-content">
+              <div className="modal-header cyan darken-1 white-text">
                 <h5 className="modal-title" id="addEmployeeModallLabel">Add Employee</h5>
-                <button type="button" className="close" data-dismiss="modal" aria-label="Close" onClick={() => this.clearActiveEmployee()}>
+                <button type="button" className="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true" className="white-text">&times;</span>
                 </button>
               </div>
-              <form onSubmit={this.handleSubmitNewEmployee}>
+              <form onSubmit={this.addEmployee}>
                 <div className="modal-body">
                   <div className="md-form mt-4">
                     <input type="text" id="employeeFirstName" className="form-control validate" pattern=".{3,}"
-                      value={activeEmployee.firstname} onChange={this.handleChangeEmployeeFirstName} required />
+                      value={activeEmployee.firstname} onChange={this.updateActiveEmployeeFirstName} required />
                     <label htmlFor="employeeFirstName" data-error="3 characters minimum" data-success="ok">First Name:</label>
                   </div>
                   <div className="md-form mt-5">
                     <input type="text" id="employeeLastName" className="form-control validate" pattern=".{3,}"
-                      value={activeEmployee.lastname} onChange={this.handleChangeEmployeeLastName} required />
+                      value={activeEmployee.lastname} onChange={this.updateActiveEmployeeLastName} required />
                     <label htmlFor="employeeLastName" data-error="3 characters minimum" data-success="ok">Last Name:</label>
                   </div>
                   <div className="md-form mt-5 mb-5">
                     <input type="text" id="employeeEmail" className="form-control validate" pattern=".{7,}"
-                      value={activeEmployee.email} onChange={this.handleChangeEmployeeEmail} required />
+                      value={activeEmployee.email} onChange={this.updateActiveEmployeeEmail} required />
                     <label htmlFor="employeeEmail" data-error="7 characters minimum" data-success="ok">Email:</label>
                   </div>
                 </div>
                 <div className="modal-footer blue-grey lighten-5">
-                  <button type="button" className="btn btn-secondary btn-responsive waves-effect" data-dismiss="modal" onClick={() => this.clearActiveEmployee()}>Cancel</button>
+                  <button type="button" className="btn btn-secondary btn-responsive waves-effect" data-dismiss="modal">Cancel</button>
                   <input type="submit" className="btn btn-primary btn-responsive waves-effect" value="Save" />
                 </div>
               </form>
@@ -319,7 +247,7 @@ class Employees extends Component {
                 <i className="fa fa-times fa-4x animated rotateIn"></i>
               </div>
               <div className="modal-footer flex-center">
-                <a href="" className="btn btn-outline-secondary-modal" onClick={this.handleRemoveEmployee}>Yes</a>
+                <a href="" className="btn btn-outline-secondary-modal" onClick={this.removeEmployee}>Yes</a>
                 <a type="button" className="btn btn-primary-modal waves-effect" data-dismiss="modal">No</a>
               </div>
             </div>
@@ -334,12 +262,12 @@ class Employees extends Component {
                   <span aria-hidden="true" className="white-text">&times;</span>
                 </button>
               </div>
-              <form id="employeesImportForm" onSubmit={this.handleConfirmImport}>
+              <form id="employeesImportForm" onSubmit={this.importEmployees}>
                 <div className="modal-body">
-                  <div className="file-field mt-4 mb-4">
+                  <div className="file-field mt-4 mb-4" id="employeesImportFileInput">
                     <div className="btn btn-primary btn-sm">
                       <span>Choose file</span>
-                      <input type="file" accept=".xls,.xlsx" onChange={this.handleImportEmployees} />
+                      <input type="file" accept=".xls,.xlsx" onChange={this.cacheEmployeeImports} />
                     </div>
                     <div className="file-path-wrapper">
                       <input type="text" className="file-path validate" id="employeesImportFile" placeholder="Choose your Employees.xlsx file" />
@@ -358,7 +286,7 @@ class Employees extends Component {
                         <tbody>
                         {importedEmployees.map((employee, index) =>
                           <tr key={employee._id}>
-                            <td>{employee.lastname + ', ' + employee.firstname  || 'empty'}</td>
+                            <td>{`${employee.lastname}, ${employee.firstname}` || 'empty'}</td>
                             <td>{employee.email || 'empty'}</td>
                             <td className={(employee.status === 'exists' ? 'grey-text' : 'green-text') + ' status'}>{employee.status}</td>
                           </tr>
@@ -369,8 +297,7 @@ class Employees extends Component {
                   ) : null}
                 </div>
                 <div className="modal-footer blue-grey lighten-5">
-                  <button type="button" className="btn btn-secondary waves-effect" data-dismiss="modal"
-                    onClick={this.handleDiscardImport}>Cancel</button>
+                  <button type="button" className="btn btn-secondary waves-effect" data-dismiss="modal" onClick={this.discardImport}>Cancel</button>
                   <input type="submit" className="btn btn-primary waves-effect" id="employeesImportSubmit" value="Import" disabled />
                 </div>
               </form>
@@ -382,4 +309,41 @@ class Employees extends Component {
   }
 }
 
-export default Employees;
+Employees.propTypes = {
+  cacheEmployeeImports: PropTypes.func.isRequired,
+  importEmployees: PropTypes.func.isRequired,
+  getEmployees: PropTypes.func.isRequired,
+  addEmployee: PropTypes.func.isRequired,
+  updateEmployee: PropTypes.func.isRequired,
+  removeEmployee: PropTypes.func.isRequired,
+  setActiveEmployee: PropTypes.func.isRequired,
+  setActiveEmployeeFirstName: PropTypes.func.isRequired,
+  setActiveEmployeeLastName: PropTypes.func.isRequired,
+  setActiveEmployeeEmail: PropTypes.func.isRequired,
+  clearActiveEmployee: PropTypes.func.isRequired,
+  employees: PropTypes.array.isRequired,
+  importedEmployees: PropTypes.array.isRequired,
+  activeEmployee: PropTypes.object.isRequired
+};
+
+const mapStateToProps = state => ({
+  employees: state.employees.items,
+  importedEmployees: state.employees.importItems,
+  activeEmployee: state.employees.activeEmployee
+});
+
+const mapDispatchToProps = (dispatch) => bindActionCreators({
+  cacheEmployeeImports,
+  importEmployees,
+  getEmployees,
+  addEmployee,
+  updateEmployee,
+  removeEmployee,
+  setActiveEmployee,
+  setActiveEmployeeFirstName,
+  setActiveEmployeeLastName,
+  setActiveEmployeeEmail,
+  clearActiveEmployee
+}, dispatch);
+
+export default connect(mapStateToProps, mapDispatchToProps)(Employees);

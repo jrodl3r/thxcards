@@ -1,6 +1,6 @@
 import React from 'react';
 import Clients from '../components/Clients';
-// import Employees from '../components/Employees';
+import Employees from '../components/Employees';
 // import History from '../components/History';
 
 const Home = () => (
@@ -10,7 +10,7 @@ const Home = () => (
         <Clients />
       </div>
       <div className="col-md-6">
-        {/*<Employees />*/}
+        <Employees />
       </div>
     </div>
     <div className="row">
