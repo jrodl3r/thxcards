@@ -86,7 +86,6 @@ export const removeClient = (client) => {
 }
 
 const removeClientSuccess = (client) => {
-  console.log('removeClientSuccess', client);
   return { type: types.REMOVE_CLIENT_SUCCESS, payload: client }
 }
 

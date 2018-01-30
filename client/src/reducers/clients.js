@@ -2,7 +2,7 @@ import * as types from '../types';
 
 const initialState = {
 	items: [],
-  importedClients: [],
+  importItems: [],
   activeClient: { _id: '', name: '', address: '' },
   loading: false,
   error: null

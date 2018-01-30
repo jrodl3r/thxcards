@@ -47,8 +47,21 @@ class Clients extends Component {
     this.props.removeClient(activeClient);
   }
 
+  confirmImport = () => {
+
+  }
+
+  importClients = () => {
+
+  }
+
+  discardImport = () => {
+
+  }
+
+
   render() {
-    const { clients, activeClient } = this.props;
+    const { clients, importedClients, activeClient } = this.props;
 
     return (
       <section className="card mb-5">
@@ -169,6 +182,58 @@ class Clients extends Component {
             </div>
           </div>
         </div>
+        <div className="modal fade" id="importClientsModal" tabIndex="-1" role="dialog" aria-labelledby="importDataModallLabel" aria-hidden="true">
+          <div className="modal-dialog" role="document">
+            <div className="modal-content">
+              <div className="modal-header cyan darken-1 white-text">
+                <h5 className="modal-title" id="importDataModallLabel">Import Clients</h5>
+                <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true" className="white-text">&times;</span>
+                </button>
+              </div>
+              <form id="clientsImportForm" onSubmit={this.confirmImport}>
+                <div className="modal-body">
+                  <div className="file-field mt-4 mb-4">
+                    <div className="btn btn-primary btn-sm">
+                      <span>Choose file</span>
+                      <input type="file" accept=".xls,.xlsx" onChange={this.importClients} />
+                    </div>
+                    <div className="file-path-wrapper">
+                      <input type="text" className="file-path validate" id="clientsImportFile" placeholder="Choose your Clients.xlsx file" />
+                    </div>
+                  </div>
+                  <div className="form-group mt-4 mb-3 d-none">
+                    <label id="clientsImportLabel" htmlFor="clientsImportFile"></label>
+                  </div>
+                  <div className="progress primary-color mb-5 d-none" id="clientsImportProgress">
+                    <div className="indeterminate"></div>
+                  </div>
+                  {importedClients.length ? (
+                    <div className="clients-summary mt-3 mb-4" id="clientsImportSummary">
+                      <h6 className="blue-gray-text mb-4">Import Summary</h6>
+                      <table className="table table-sm table-striped mb-0">
+                        <tbody>
+                        {importedClients.map((client, index) =>
+                          <tr key={client._id}>
+                            <td>{client.name || 'empty'}</td>
+                            <td>{client.address || 'empty'}</td>
+                            <td className={(client.status === 'exists' ? 'grey-text' : 'green-text') + ' status'}>{client.status}</td>
+                          </tr>
+                        )}
+                        </tbody>
+                      </table>
+                    </div>
+                  ) : null}
+                </div>
+                <div className="modal-footer blue-grey lighten-5">
+                  <button type="button" className="btn btn-secondary waves-effect" data-dismiss="modal"
+                    onClick={this.discardImport}>Cancel</button>
+                  <input type="submit" className="btn btn-primary waves-effect" id="clientsImportSubmit" value="Import" disabled />
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
       </section>
     );
   }
@@ -189,6 +254,7 @@ Clients.propTypes = {
 
 const mapStateToProps = state => ({
   clients: state.clients.items,
+  importedClients: state.clients.importItems,
   activeClient: state.clients.activeClient
 });
 
