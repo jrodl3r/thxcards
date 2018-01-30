@@ -17,6 +17,7 @@ export default (state = initialState, action) => {
     case types.ADD_CLIENT:
     case types.UPDATE_CLIENT:
     case types.REMOVE_CLIENT:
+    case types.IMPORT_CLIENTS:
       return {...state, loading: true};
 
     case types.GET_CLIENTS_SUCCESS:
@@ -48,10 +49,25 @@ export default (state = initialState, action) => {
         error: null
       };
 
+    case types.IMPORT_CLIENTS_SUCCESS:
+      return {...state,
+        items: [...state.items, ...state.importItems],
+        importItems: [],
+        loading: false,
+        error: null
+      };
+
+    case types.CACHE_CLIENT_IMPORTS:
+      return {...state, importItems: action.payload};
+
+    case types.CLEAR_CLIENT_IMPORTS:
+      return {...state, importItems: []};
+
     case types.GET_CLIENTS_FAILURE:
     case types.ADD_CLIENT_FAILURE:
     case types.UPDATE_CLIENT_FAILURE:
     case types.REMOVE_CLIENT_FAILURE:
+    case types.IMPORT_CLIENTS_FAILURE:
       error = action.payload || {message: action.payload.message};
       return {...state, loading: false, error};
 

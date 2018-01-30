@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import XLSX from 'xlsx';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { resetModal } from '../ui';
-import { getClients, addClient, updateClient, removeClient, setActiveClient,
+import { closeModal, clearValidation, resetForm, resetImportModal, importMessage, importError, importShowProgress, hideImportInput } from '../utils/ui';
+import { cacheClientImports, importClients, getClients, addClient, updateClient, removeClient, setActiveClient,
   setActiveClientName, setActiveClientAddress, clearActiveClient } from '../actions/clients';
 
 class Clients extends Component {
@@ -13,12 +14,12 @@ class Clients extends Component {
 
   updateActiveClient = (client) => {
     this.props.setActiveClient(client);
-    resetModal('editClientModal');
+    clearValidation('editClientModal');
   }
 
   clearActiveClient = () => {
     this.props.clearActiveClient();
-    resetModal('addClientModal');
+    clearValidation('addClientModal');
   }
 
   updateActiveClientName = (e) => {
@@ -47,18 +48,73 @@ class Clients extends Component {
     this.props.removeClient(activeClient);
   }
 
-  confirmImport = () => {
+  cacheClientImports = (e) => {
+    let reader = new FileReader();
+    const file = e.target.files[0];
 
+    reader.onload = (e) => {
+      let noErrors = true;
+      let haveImports = false;
+      const fileData = e.target.result;
+      const wb = XLSX.read(fileData, {type: 'binary'});
+      const ws = wb.Sheets[wb.SheetNames[0]];
+      const importItems = XLSX.utils.sheet_to_json(ws);
+
+      if (importItems !== undefined && importItems.length) {
+        for (let i = 0; i < importItems.length; i++) { // Check For Emptys
+          if (!importItems[i].hasOwnProperty('name') || !importItems[i].hasOwnProperty('address')) {
+            importError('clients', 'Missing Client Name or Address Field');
+            noErrors = false;
+            break;
+          }
+          importItems[i]._id = i;
+        }
+        if (noErrors) { // Diff + Show Summary
+          const activeClients = this.props.clients;
+          importItems.forEach(item => {
+            for (let i = 0; i < activeClients.length; i++) {
+              if (item.name === activeClients[i].name) { // Exists
+                item.status = 'exists';
+                break;
+              } else if (i === activeClients.length - 1) { // New
+                item.status = 'new';
+                haveImports = true;
+              }
+            }
+          });
+          if (haveImports) { // Ready
+            this.props.cacheClientImports(importItems);
+            hideImportInput('clients');
+          } else { importError('clients', 'No New Clients Found'); }
+        }
+      } else { importError('clients', 'Error Reading File'); }
+    };
+
+    if (file instanceof Blob) { reader.readAsBinaryString(file); }
+    resetForm('clientsImportForm');
   }
 
-  importClients = () => {
+  importClients = (e) => {
+    let newClients = [];
+    const importedClients = this.props.importedClients;
 
+    e.preventDefault();
+    importMessage('clients', 'Importing Client Data');
+    importShowProgress('clients');
+    importedClients.forEach(client => {
+      if (client.status === 'new') {
+        newClients.push({name: client.name, address: client.address});
+      }
+    });
+    this.props.importClients(newClients);
   }
 
   discardImport = () => {
-
+    closeModal('importClientsModal');
+    setTimeout(() => {
+      resetImportModal('clients');
+    }, 300);
   }
-
 
   render() {
     const { clients, importedClients, activeClient } = this.props;
@@ -191,12 +247,12 @@ class Clients extends Component {
                   <span aria-hidden="true" className="white-text">&times;</span>
                 </button>
               </div>
-              <form id="clientsImportForm" onSubmit={this.confirmImport}>
+              <form id="clientsImportForm" onSubmit={this.importClients}>
                 <div className="modal-body">
-                  <div className="file-field mt-4 mb-4">
+                  <div className="file-field mt-4 mb-4" id="clientsImportFileInput">
                     <div className="btn btn-primary btn-sm">
                       <span>Choose file</span>
-                      <input type="file" accept=".xls,.xlsx" onChange={this.importClients} />
+                      <input type="file" accept=".xls,.xlsx" onChange={this.cacheClientImports} />
                     </div>
                     <div className="file-path-wrapper">
                       <input type="text" className="file-path validate" id="clientsImportFile" placeholder="Choose your Clients.xlsx file" />
@@ -226,8 +282,7 @@ class Clients extends Component {
                   ) : null}
                 </div>
                 <div className="modal-footer blue-grey lighten-5">
-                  <button type="button" className="btn btn-secondary waves-effect" data-dismiss="modal"
-                    onClick={this.discardImport}>Cancel</button>
+                  <button type="button" className="btn btn-secondary waves-effect" data-dismiss="modal" onClick={this.discardImport}>Cancel</button>
                   <input type="submit" className="btn btn-primary waves-effect" id="clientsImportSubmit" value="Import" disabled />
                 </div>
               </form>
@@ -240,6 +295,8 @@ class Clients extends Component {
 }
 
 Clients.propTypes = {
+  cacheClientImports: PropTypes.func.isRequired,
+  importClients: PropTypes.func.isRequired,
   getClients: PropTypes.func.isRequired,
   addClient: PropTypes.func.isRequired,
   updateClient: PropTypes.func.isRequired,
@@ -259,6 +316,8 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({
+  cacheClientImports,
+  importClients,
   getClients,
   addClient,
   updateClient,

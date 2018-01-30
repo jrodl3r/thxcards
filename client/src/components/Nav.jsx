@@ -1,8 +1,8 @@
-/* global $, toastr */
+/* global toastr */
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-import { closeNav, toggleModal } from '../ui';
+import { closeNav, toggleModal } from '../utils/ui';
 import logo from '../images/logo.svg';
 
 class Nav extends Component {

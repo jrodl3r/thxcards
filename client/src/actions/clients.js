@@ -1,11 +1,11 @@
 /* global toastr */
 import axios from 'axios';
-import { closeModal } from '../ui';
+import { closeModal, resetImportModal } from '../utils/ui';
 import * as types from '../types';
 
 export const getClients = (dispatch) => {
   return (dispatch) => {
-    dispatch({type: types.GET_CLIENTS});
+    dispatch({ type: types.GET_CLIENTS });
     axios.get('/api/clients')
       .then(res => dispatch(getClientsSuccess(res.data)))
       .catch(error => dispatch(getClientsFailure(error)));
@@ -22,7 +22,7 @@ const getClientsFailure = (error) => {
 
 export const addClient = (client) => {
   return (dispatch) => {
-    dispatch({type: types.ADD_CLIENT});
+    dispatch({ type: types.ADD_CLIENT });
     axios.post('/api/clients', client)
       .then(res => {
         toastr.success(`Added ${client.name} to Clients`);
@@ -46,7 +46,7 @@ const addClientFailure = (error) => {
 
 export const updateClient = (client) => {
   return (dispatch) => {
-    dispatch({type: types.UPDATE_CLIENT});
+    dispatch({ type: types.UPDATE_CLIENT });
     axios.put('/api/clients/' + client._id, client)
       .then(res => {
         toastr.success(`Client Updated (${client.name})`);
@@ -70,7 +70,7 @@ const updateClientFailure = (error) => {
 
 export const removeClient = (client) => {
   return (dispatch) => {
-    dispatch({type: types.REMOVE_CLIENT});
+    dispatch({ type: types.REMOVE_CLIENT });
     axios.delete('/api/clients/' + client._id, { clientID: client._id })
       .then(res => {
         toastr.success(`Client Removed (${client.name})`);
@@ -107,4 +107,35 @@ export const setActiveClientAddress = (address) => {
 
 export const clearActiveClient = () => {
   return { type: types.CLEAR_ACTIVE_CLIENT }
+}
+
+export const cacheClientImports = (clients) => {
+  return { type: types.CACHE_CLIENT_IMPORTS, payload: clients }
+}
+
+export const importClients = (clients) => {
+  return (dispatch) => {
+    dispatch({ type: types.IMPORT_CLIENTS });
+    axios.post('/api/clients/import', clients)
+      .then(res => {
+        toastr.success('Imported New Clients');
+        dispatch(importClientsSuccess(clients));
+        closeModal('importClientsModal');
+        setTimeout(() => {
+          resetImportModal('clients');
+        }, 300);
+      })
+      .catch(error => {
+        dispatch(importClientsFailure(error));
+        toastr.error(`Clients Import Failed`);
+      });
+  }
+}
+
+export const importClientsSuccess = (clients) => {
+  return { type: types.IMPORT_CLIENTS_SUCCESS, payload: clients }
+}
+
+export const importClientsFailure = (error) => {
+  return { type: types.IMPORT_CLIENTS_FAILURE, payload: error }
 }
