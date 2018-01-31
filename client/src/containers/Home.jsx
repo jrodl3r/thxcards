@@ -1,7 +1,7 @@
 import React from 'react';
 import Clients from '../components/Clients';
 import Employees from '../components/Employees';
-// import History from '../components/History';
+import History from '../components/History';
 
 const Home = () => (
   <div className="container">
@@ -15,7 +15,7 @@ const Home = () => (
     </div>
     <div className="row">
       <div className="col">
-        {/*<History />*/}
+        <History />
       </div>
     </div>
   </div>

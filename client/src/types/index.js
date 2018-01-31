@@ -1,6 +1,4 @@
-// --------------------------------------------------------------------------
 // CLIENTS
-// --------------------------------------------------------------------------
 export const SET_ACTIVE_CLIENT = 'SET_ACTIVE_CLIENT';
 export const SET_ACTIVE_CLIENT_NAME = 'SET_ACTIVE_CLIENT_NAME';
 export const SET_ACTIVE_CLIENT_ADDRESS = 'SET_ACTIVE_CLIENT_ADDRESS';
@@ -28,9 +26,7 @@ export const IMPORT_CLIENTS_FAILURE = 'IMPORT_CLIENTS_FAILURE';
 export const CACHE_CLIENT_IMPORTS = 'CACHE_CLIENT_IMPORTS';
 export const CLEAR_CLIENT_IMPORTS = 'CLEAR_CLIENT_IMPORTS';
 
-// --------------------------------------------------------------------------
 // EMPLOYEES
-// --------------------------------------------------------------------------
 export const SET_ACTIVE_EMPLOYEE = 'SET_ACTIVE_EMPLOYEE';
 export const SET_ACTIVE_EMPLOYEE_FIRSTNAME = 'SET_ACTIVE_EMPLOYEE_FIRSTNAME';
 export const SET_ACTIVE_EMPLOYEE_LASTNAME = 'SET_ACTIVE_EMPLOYEE_LASTNAME';
@@ -58,3 +54,8 @@ export const IMPORT_EMPLOYEES_SUCCESS = 'IMPORT_EMPLOYEES_SUCCESS';
 export const IMPORT_EMPLOYEES_FAILURE = 'IMPORT_EMPLOYEES_FAILURE';
 export const CACHE_EMPLOYEE_IMPORTS = 'CACHE_EMPLOYEE_IMPORTS';
 export const CLEAR_EMPLOYEE_IMPORTS = 'CLEAR_EMPLOYEE_IMPORTS';
+
+// HISTORY
+export const GET_HISTORY = 'GET_HISTORY';
+export const GET_HISTORY_SUCCESS = 'GET_HISTORY_SUCCESS';
+export const GET_HISTORY_FAILURE = 'GET_HISTORY_FAILURE';

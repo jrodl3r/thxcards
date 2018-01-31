@@ -1,21 +1,16 @@
 import React, { Component } from 'react';
-import axios from 'axios';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { getHistory } from '../actions/history';
 
 class History extends Component {
-  state = { history: [] }
-
-  componentDidMount() {
-    this.getHistory();
-  }
-
-  getHistory = () => {
-    axios.get('/api/history')
-      .then((res) => this.setState({history: res.data}))
-      .catch(err => console.log(err));
+  componentDidMount = () => {
+    this.props.getHistory();
   }
 
   render() {
-    const { history } = this.state;
+    const { history } = this.props;
 
     return (
       <section className="card mb-5">
@@ -37,7 +32,7 @@ class History extends Component {
                 {history.map((item, index) => 
                   <tr key={item._id}>
                     <td className="date">Date</td>
-                    <td className="info">{item.list || 'empty'}</td>
+                    <td className="info">{item.items || 'empty'}</td>
                     <td className="action">
                       <a href="" title="View" data-toggle="modal" data-target="#viewHistoryModal">
                         <i className="fas fa-lg fa-eye blue-grey-text"></i>
@@ -78,4 +73,16 @@ class History extends Component {
   }
 }
 
-export default History;
+History.propTypes = {
+  history: PropTypes.array.isRequired
+};
+
+const mapStateToProps = state => ({
+  history: state.history.items
+});
+
+const mapDispatchToProps = (dispatch) => bindActionCreators({
+  getHistory
+}, dispatch);
+
+export default connect(mapStateToProps, mapDispatchToProps)(History);
