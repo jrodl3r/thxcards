@@ -83,6 +83,9 @@ export default (state = initialState, action) => {
     case types.CLEAR_ACTIVE_CLIENT:
       return {...state, activeClient: {_id: '', name: '', address: ''}};
 
+    case types.ZERO_DATABASE_SUCCESS:
+      return {items: [], importItems: [], activeClient: {_id: '', name: '', address: ''}, loading: false, error: null};
+
 		default:
 			return state;
 	}

@@ -1,13 +1,13 @@
-/* global toastr */
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import { closeNav, toggleModal } from '../utils/ui';
+import { zeroDB } from '../actions/app';
 import logo from '../images/logo.svg';
 
 class Nav extends Component {
-  state = {}
-
   openImportClientsModal = (event) => {
     event.preventDefault();
     closeNav();
@@ -20,19 +20,9 @@ class Nav extends Component {
     toggleModal('importEmployeesModal');
   }
 
-  handleZeroDB = (event) => {
+  zeroDB = (event) => {
     event.preventDefault();
-    axios.all([
-      axios.get('/api/clients/wipe'),
-      axios.get('/api/employees/wipe'),
-      axios.get('/api/history/wipe')
-    ])
-    .then(() => {
-      toastr.success('Database Wiped');
-      closeNav();
-      // TODO: After Redux is implemented, clear state for components
-    })
-    .catch(err => console.log(err));
+    this.props.zeroDB();
   }
 
   render() {
@@ -54,7 +44,7 @@ class Nav extends Component {
               <a className="nav-link" href="" onClick={this.openImportEmployeesModal}>Import Employees</a>
             </li>
             <li className="nav-item">
-              <a className="nav-link" href="" onClick={this.handleZeroDB}>Zero Database</a>
+              <a className="nav-link" href="" onClick={this.zeroDB}>Zero Database</a>
             </li>
             <li className="nav-item">
               <a className="nav-link" href="">Fast Forward</a>
@@ -69,4 +59,10 @@ class Nav extends Component {
   }
 }
 
-export default Nav;
+Nav.propTypes = {
+  zeroDB: PropTypes.func.isRequired
+};
+
+const mapDispatchToProps = (dispatch) => bindActionCreators({ zeroDB }, dispatch);
+
+export default connect(null, mapDispatchToProps)(Nav);

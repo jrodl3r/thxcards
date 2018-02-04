@@ -86,6 +86,9 @@ export default (state = initialState, action) => {
     case types.CLEAR_ACTIVE_EMPLOYEE:
       return {...state, activeEmployee: {_id: '', firstname: '', lastname: '', email: ''}};
 
+    case types.ZERO_DATABASE_SUCCESS:
+      return {items: [], importItems: [], activeEmployee: {_id: '', firstname: '', lastname: '', email: ''}, loading: false, error: null};
+
 		default:
 			return state;
 	}

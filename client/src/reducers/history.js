@@ -21,6 +21,9 @@ export default (state = initialState, action) => {
       error = action.data || {message: action.data.message};
       return {...state, loading: false, error};
 
+    case types.ZERO_DATABASE_SUCCESS:
+      return {items: [], loading: false, error: null};
+
 		default:
 			return state;
 	}
