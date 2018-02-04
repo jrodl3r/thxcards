@@ -11,11 +11,12 @@ LSVT Client Thank You Card Manager
 * [Redux Documentation](https://redux.js.org)
 
 ## Todo
-* setup timing + mailer systems
-* setup data sorting
-* setup data filtering
+* setup schedule / date picker
+* setup cron server (timing + mailer systems)
+* setup filtering + sorting
 * setup matching system
 * setup create history item
 * setup auth0 authentication
 * move index.js into /server (Heroku: 💥)
+* setup unit testing (components, actions, reducers)
 * setup codeship automated test + deploy
