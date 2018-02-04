@@ -267,17 +267,23 @@ class Clients extends Component {
                   {importedClients.length ? (
                     <div className="clients-summary mt-3 mb-4" id="clientsImportSummary">
                       <h6 className="blue-gray-text mb-4">Import Summary</h6>
-                      <table className="table table-sm table-striped mb-0">
-                        <tbody>
-                        {importedClients.map((client, index) =>
-                          <tr key={client._id}>
-                            <td>{client.name || 'empty'}</td>
-                            <td>{client.address || 'empty'}</td>
-                            <td className={(client.status === 'exists' ? 'grey-text' : 'green-text') + ' status'}>{client.status}</td>
-                          </tr>
-                        )}
-                        </tbody>
-                      </table>
+                      <div className="card p-0">
+                        <table className="table table-sm table-striped rounded-top rounded-bottom mb-0">
+                          <tbody>
+                          {importedClients.map((client, index) =>
+                            <tr key={client._id}>
+                              <td>{client.name || 'empty'}</td>
+                              <td>{client.address || 'empty'}</td>
+                              <td className="text-center">
+                                <span className={(client.status === 'new' ? 'green' : 'mdb-color lighten-2 white-text') + ' badge badge-pill'}>
+                                  {client.status}
+                                </span>
+                              </td>
+                            </tr>
+                          )}
+                          </tbody>
+                        </table>
+                      </div>
                     </div>
                   ) : null}
                 </div>
