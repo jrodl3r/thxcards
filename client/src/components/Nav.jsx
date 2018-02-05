@@ -8,6 +8,12 @@ import { zeroDB } from '../actions/app';
 import logo from '../images/logo.svg';
 
 class Nav extends Component {
+  openScheduleModal = (event) => {
+    event.preventDefault();
+    closeNav();
+    toggleModal('updateScheduleModal');
+  }
+
   openImportClientsModal = (event) => {
     event.preventDefault();
     closeNav();
@@ -38,19 +44,22 @@ class Nav extends Component {
         <div className="collapse navbar-collapse" id="navbarSupportedContent">
           <ul className="navbar-nav mr-auto">
             <li className="nav-item">
+              <a className="nav-link" href="" onClick={this.openScheduleModal}>Schedule</a>
+            </li>
+            <li className="nav-item">
               <a className="nav-link" href="" onClick={this.openImportClientsModal}>Import Clients</a>
             </li>
             <li className="nav-item">
               <a className="nav-link" href="" onClick={this.openImportEmployeesModal}>Import Employees</a>
             </li>
             <li className="nav-item">
-              <a className="nav-link" href="" onClick={this.zeroDB}>Zero Database</a>
+              <Link className="nav-link" to="/help" onClick={closeNav}>Help</Link>
             </li>
-            <li className="nav-item">
+            <li className="nav-item opaque">
               <a className="nav-link" href="">Fast Forward</a>
             </li>
-            <li className="nav-item">
-              <Link className="nav-link" to="/help" onClick={closeNav}>Help</Link>
+            <li className="nav-item opaque">
+              <a className="nav-link" href="" onClick={this.zeroDB}>Zero Database</a>
             </li>
           </ul>
         </div>
